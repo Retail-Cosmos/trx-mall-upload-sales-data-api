@@ -2,9 +2,9 @@
 
 return [
     'api' => [
-        'base_uri' => env('TANGENT_BASE_URI'),
-        'grant_type' => env('TANGENT_GRANT_TYPE'),
-        'username' => env('TANGENT_USERNAME'),
-        'password' => env('TANGENT_PASSWORD'),
+        'base_uri' => env('TRX_MALL_API_BASE_URI'),
+        'grant_type' => env('TRX_MALL_API_GRANT_TYPE'),
+        'username' => env('TRX_MALL_API_USERNAME'),
+        'password' => env('TRX_MALL_API_PASSWORD'),
     ],
 ];
