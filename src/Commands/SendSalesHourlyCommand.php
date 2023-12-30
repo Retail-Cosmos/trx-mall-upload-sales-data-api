@@ -15,14 +15,11 @@ class SendSalesHourlyCommand extends Command
 
     /**
      * The console command description.
-     */
-    protected $description = 'Send sales in hourly(00-23) format to Tangent API';
-
-    /**
-     * The console command description.
      *
      * @var string
      */
+    protected $description = 'Send sales in hourly(00-23) format to Tangent API';
+
     public function handle()
     {
         //
