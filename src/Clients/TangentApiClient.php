@@ -2,8 +2,8 @@
 
 namespace RetailCosmos\TrxMallUploadSalesDataApi\Clients;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 
 class TangentApiClient
 {
@@ -21,7 +21,7 @@ class TangentApiClient
     private function validateConfig(array $keys): void
     {
         foreach ($keys as $key) {
-            if (!isset($this->config[$key])) {
+            if (! isset($this->config[$key])) {
                 throw new \Exception("$key is not set");
             }
         }
@@ -32,11 +32,13 @@ class TangentApiClient
         if (session('token_expiry') > time()) {
             return session('token');
         }
-        $response = Http::get($this->config['base_uri'].'/token', [
-            'grant_type' => $this->config['grant_type'],
-            'username' => $this->config['username'],
-            'password' => $this->config['password'],
-        ]);
+        $response = Http::asJson()
+            ->acceptJson()
+            ->get($this->config['base_uri'].'/token', [
+                'grant_type' => $this->config['grant_type'],
+                'username' => $this->config['username'],
+                'password' => $this->config['password'],
+            ]);
 
         if ($response->ok()) {
             $response = $response->json();
