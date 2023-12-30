@@ -19,7 +19,6 @@ class TrxMallUploadSalesDataApiServiceProvider extends PackageServiceProvider
             ->name('trx-mall-upload-sales-data-api')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_trx-mall-upload-sales-data-api_table')
             ->hasCommand(TrxMallUploadSalesDataApiCommand::class);
     }
 }
