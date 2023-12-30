@@ -11,14 +11,14 @@ class SendSalesDailyCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'tangent:send-sales-hourly';
+    protected $signature = 'tangent:send-sales-daily';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send sales in hourly(00-23) format to Tangent API';
+    protected $description = 'Send sales in hourly(00-23) format to Tangent API daily';
 
     public function handle()
     {
