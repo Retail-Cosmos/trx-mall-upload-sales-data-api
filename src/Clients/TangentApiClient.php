@@ -41,13 +41,12 @@ class TangentApiClient
             ]);
 
         if ($response->ok()) {
-            $response = $response->json();
-            session(['token' => $response['access_token']]);
-            session(['token_expiry' => time() + $response['expires_in']]);
+            session(['token' => $response->json('access_token')]);
+            session(['token_expiry' => time() + $response->json('expires_in')]);
 
-            return $response['access_token'];
+            return $response->json('access_token');
         } else {
-            new \Exception($response->json()['error_description']);
+            new \Exception($response->json('error_description'));
         }
     }
 
