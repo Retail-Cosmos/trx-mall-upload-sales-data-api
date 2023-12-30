@@ -2,7 +2,7 @@
 
 namespace RetailCosmos\TrxMallUploadSalesDataApi;
 
-use RetailCosmos\TrxMallUploadSalesDataApi\Commands\SendSalesDailyCommand;
+use RetailCosmos\TrxMallUploadSalesDataApi\Commands\SendSalesCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -15,6 +15,6 @@ class TrxMallUploadSalesDataApiServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigration('create_trx-mall-upload-sales-data-api_table')
-            ->hasCommand(SendSalesDailyCommand::class);
+            ->hasCommand(SendSalesCommand::class);
     }
 }
