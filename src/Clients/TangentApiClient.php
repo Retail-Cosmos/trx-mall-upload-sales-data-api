@@ -9,7 +9,22 @@ class TangentApiClient
 {
     public function __construct(private array $config)
     {
-        // todo: check if we have required configs
+        $this->validateConfig([
+            'base_uri',
+            'grant_type',
+            'username',
+            'password',
+        ]);
+
+    }
+
+    private function validateConfig(array $keys): void
+    {
+        foreach ($keys as $key) {
+            if (!isset($this->config[$key])) {
+                throw new \Exception("$key is not set");
+            }
+        }
     }
 
     private function getToken(): string
