@@ -4,7 +4,7 @@ namespace RetailCosmos\TrxMallUploadSalesDataApi\Services;
 
 use Illuminate\Support\Facades\Validator;
 
-Class SalesDataProcessor
+class SalesDataProcessor
 {
     /**
      * @var array<int,string>
@@ -34,9 +34,10 @@ Class SalesDataProcessor
     ];
 
     /**
-     * @throws \Exception
-     * @param array<int,mixed> $sales
+     * @param  array<int,mixed>  $sales
      * @return array<int,mixed>
+     *
+     * @throws \Exception
      */
     public function process(array $sales): array
     {
@@ -50,17 +51,18 @@ Class SalesDataProcessor
     }
 
     /**
-     * @param array<int,mixed> $sales
+     * @param  array<int,mixed>  $sales
      */
     private function transform(array &$sales): void
     {
         // Todo: transform the sales data here
-        return;
+
     }
 
     /**
+     * @param  array<int,mixed>  $sales
+     *
      * @throws \Exception
-     * @param array<int,mixed> $sales
      */
     private function validate(array $sales): void
     {
@@ -77,12 +79,12 @@ Class SalesDataProcessor
                 'required',
                 'between:00,23',
             ],
-            'sales.*.sale.receiptcount' =>$this->integerRules,
+            'sales.*.sale.receiptcount' => $this->integerRules,
             'sales.*.sale.gto' => $this->amountRules,
             'sales.*.sale.gst' => $this->amountRules,
             'sales.*.sale.discount' => $this->amountRules,
             'sales.*.sale.servicecharge' => $this->amountRules,
-            'sales.*.sale.noofpax' =>$this->integerRules,
+            'sales.*.sale.noofpax' => $this->integerRules,
             'sales.*.sale.cash' => $this->amountRules,
             'sales.*.sale.visa' => $this->amountRules,
             'sales.*.sale.mastercard' => $this->amountRules,
