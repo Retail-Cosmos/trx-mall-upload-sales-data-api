@@ -3,6 +3,7 @@
 namespace RetailCosmos\TrxMallUploadSalesDataApi\Clients;
 
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class TangentApiClient
@@ -18,38 +19,6 @@ class TangentApiClient
 
     }
 
-    private function validateConfig(array $keys): void
-    {
-        foreach ($keys as $key) {
-            if (! isset($this->config[$key])) {
-                throw new \Exception("$key is not set");
-            }
-        }
-    }
-
-    private function getToken(): string
-    {
-        if (session('token_expiry') > time()) {
-            return session('token');
-        }
-        $response = Http::asJson()
-            ->acceptJson()
-            ->get($this->config['base_uri'].'/token', [
-                'grant_type' => $this->config['grant_type'],
-                'username' => $this->config['username'],
-                'password' => $this->config['password'],
-            ]);
-
-        if ($response->ok()) {
-            session(['token' => $response->json('access_token')]);
-            session(['token_expiry' => time() + $response->json('expires_in')]);
-
-            return $response->json('access_token');
-        } else {
-            new \Exception($response->json('error_description'));
-        }
-    }
-
     public function sendSalesHourly(array $sales): Response
     {
         $token = $this->getToken();
@@ -62,5 +31,51 @@ class TangentApiClient
             ]);
 
         return $response;
+    }
+
+    private function validateConfig(array $keys): void
+    {
+        foreach ($keys as $key) {
+            if (! isset($this->config[$key])) {
+                throw new \Exception("$key is not set");
+            }
+        }
+
+        if (validator($this->config, [
+            'base_uri' => 'required|url',
+            'grant_type' => 'required|string',
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ])->fails()) {
+            throw new \Exception('Invalid config');
+        }
+    }
+
+    private function getToken(): string
+    {
+        $token = Cache::get('trx-mall-upload-sales-data-api-token');
+
+        if ($token !== null) {
+            return $token;
+        }
+
+        $response = Http::asJson()
+            ->acceptJson()
+            ->get($this->config['base_uri'].'/token', [
+                'grant_type' => $this->config['grant_type'],
+                'username' => $this->config['username'],
+                'password' => $this->config['password'],
+            ]);
+
+        if ($response->ok()) {
+            $token = $response->json('access_token');
+            $expiry = time() + $response->json('expires_in') - 60 * 5;
+
+            Cache::put('trx-mall-upload-sales-data-api-token', $token, $expiry);
+
+            return $token;
+        } else {
+            throw new \Exception($response->json('error_description'));
+        }
     }
 }
