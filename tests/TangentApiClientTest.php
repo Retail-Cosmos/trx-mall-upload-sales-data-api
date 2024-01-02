@@ -142,3 +142,26 @@ it('throws an exception if token retrieval fails', function () {
         $method->invoke($client);
     })->toThrow(\Exception::class, 'Token retrieval failed');
 });
+
+it('returns the correct expiry prior to token', function () {
+
+    $client = new TangentApiClient([
+        'base_uri' => 'http://example.com',
+        'grant_type' => 'client_credentials',
+        'username' => 'test_user',
+        'password' => 'test_password',
+    ]);
+
+    $expiry = 1800; // 30 minutes
+    $min = 5;
+
+    $expectedExpiryPriorToToken = time() + $expiry - 60 * $min;
+
+    $method = new ReflectionMethod(TangentApiClient::class, 'getExpiryPriorToToken');
+
+    $method->setAccessible(true);
+
+    $actualExpiryPriorToToken = $method->invoke($client, $expiry, $min);
+
+    expect($actualExpiryPriorToToken)->toBe($expectedExpiryPriorToToken);
+});
