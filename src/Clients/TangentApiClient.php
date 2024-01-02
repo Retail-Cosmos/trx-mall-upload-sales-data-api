@@ -19,6 +19,11 @@ class TangentApiClient
 
     }
 
+    /**
+     * @param  array<string, mixed>  $sales
+     *
+     * @throws \Exception
+     */
     public function sendSalesHourly(array $sales): Response
     {
         $token = $this->getToken();
@@ -33,6 +38,11 @@ class TangentApiClient
         return $response;
     }
 
+    /**
+     * @param  array<int, string>  $keys
+     *
+     * @throws \Exception
+     */
     private function validateConfig(array $keys): void
     {
         foreach ($keys as $key) {
@@ -51,6 +61,9 @@ class TangentApiClient
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     private function getToken(): string
     {
         $token = Cache::get('trx-mall-upload-sales-data-api-token');
@@ -69,13 +82,25 @@ class TangentApiClient
 
         if ($response->ok()) {
             $token = $response->json('access_token');
-            $expiry = time() + $response->json('expires_in') - 60 * 5;
 
-            Cache::put('trx-mall-upload-sales-data-api-token', $token, $expiry);
+            Cache::put(
+                'trx-mall-upload-sales-data-api-token',
+                $token,
+                $this->getExpiryPriorToToken($response->json('expires_in'), 5)
+            );
 
             return $token;
         } else {
             throw new \Exception($response->json('error_description'));
         }
+    }
+
+    /**
+     * if token expires in 10 minutes,
+     * we will get a new token $min minutes before it expires
+     */
+    private function getExpiryPriorToToken(int $expiry, int $min): int
+    {
+        return time() + $expiry - 60 * $min;
     }
 }
