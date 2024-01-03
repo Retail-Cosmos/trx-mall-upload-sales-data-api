@@ -2,6 +2,8 @@
 
 namespace RetailCosmos\TrxMallUploadSalesDataApi\Services;
 
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 
 class SalesDataProcessor
@@ -24,42 +26,55 @@ class SalesDataProcessor
         'min:0',
     ];
 
-    /**
-     * @var array<int,string>
-     */
-    private array $idRules = [
-        'required',
-        'integer',
-        'min:1',
-    ];
+    private array $paymentTypes;
 
     /**
-     * @param  array<int,mixed>  $sales
+     * @var Collection<int,mixed>
+     */
+    private Collection $preparedSales;
+
+    public function __construct()
+    {
+        $this->preparedSales = new Collection();
+
+        $this->paymentTypes = [ // later PaymentType::values()
+            'cash',
+            'tng',
+            'visa',
+            'mastercard',
+            'amex',
+            'voucher',
+            'othersamount',
+        ];
+    }
+
+    /**
+     * @param  Collection<int,mixed>  $sales
      * @return array<int,mixed>
      *
      * @throws \Exception
      */
-    public function process(array $sales): array
+    public function process(Collection $sales, array $storeData): array
     {
-        // if required, transform the sales data here
-        $this->transform($sales);
+        $this->validate($sales->toArray());
 
-        $this->validate($sales);
+        $sales->groupBy(function ($sale) {
+            return Carbon::parse($sale['date'])->format('dmy');
+        })->each(function ($sales, $date) use ($storeData) {
+            $this->createTwentyFourHoursForMachine($storeData, $date);
+            $sales->groupBy(function ($sale) {
+                return Carbon::parse($sale['date'])->format('H');
+            })->each(function ($sales, $hour) use ($date) {
+                $this->aggregateSalesForHour($sales, $hour, $date);
+            });
+        });
 
-        return $sales;
-
+        return $this->preparedSales->all();
     }
 
     /**
-     * @param  array<int,mixed>  $sales
-     */
-    private function transform(array &$sales): void
-    {
-        // Todo: transform the sales data here
-
-    }
-
-    /**
+     * for validating data given by the developer
+     *
      * @param  array<int,mixed>  $sales
      *
      * @throws \Exception
@@ -67,39 +82,62 @@ class SalesDataProcessor
     private function validate(array $sales): void
     {
         $validator = Validator::make($sales, [
-            'sales' => ['required', 'array'],
-            'sales.*.sale' => ['required', 'array'],
-            'sales.*.sale.machineid' => $this->idRules,
-            'sales.*.sale.batchid' => $this->idRules,
-            'sales.*.sale.date' => [
-                'required',
-                'date_format:Ymd',
-            ],
-            'sales.*.sale.hour' => [
-                'required',
-                'between:00,23',
-            ],
-            'sales.*.sale.receiptcount' => $this->integerRules,
-            'sales.*.sale.gto' => $this->amountRules,
-            'sales.*.sale.gst' => $this->amountRules,
-            'sales.*.sale.discount' => $this->amountRules,
-            'sales.*.sale.servicecharge' => $this->amountRules,
-            'sales.*.sale.noofpax' => $this->integerRules,
-            'sales.*.sale.cash' => $this->amountRules,
-            'sales.*.sale.visa' => $this->amountRules,
-            'sales.*.sale.mastercard' => $this->amountRules,
-            'sales.*.sale.amex' => $this->amountRules,
-            'sales.*.sale.voucher' => $this->amountRules,
-            'sales.*.sale.othersamount' => $this->amountRules,
-            'sales.*.sale.gstregistered' => [
-                'required',
-                'string',
-                'in:Y,N',
-            ],
+            '*.gst' => $this->amountRules,
+            '*.gto' => $this->amountRules,
+            '*.discount' => $this->amountRules,
+            '*.servicecharge' => $this->amountRules,
+            '*.noofpax' => $this->integerRules,
+            ...array_fill_keys($this->paymentTypes, $this->amountRules),
         ]);
 
         if ($validator->fails()) {
             throw new \Exception($validator->errors()->first());
         }
+    }
+
+    private function createTwentyFourHoursForMachine($storeData, $date)
+    {
+        $hours = [];
+        for ($i = 0; $i < 24; $i++) {
+            $hours[$i] = ['sale' => [
+                'machineid' => $storeData['machineid'],
+                'batchid' => 1,
+                'date' => $date,
+                'hour' => $i,
+                'receiptcount' => 0,
+                'gto' => 0,
+                'gst' => 0,
+                'discount' => 0,
+                'servicecharge' => 0,
+                'noofpax' => 0,
+                'gstregistered' => $storeData['gstregistered'],
+                ...array_fill_keys($this->paymentTypes, 0),
+            ]];
+        }
+        $this->preparedSales->push(...$hours);
+    }
+
+    private function aggregateSalesForHour($sales, $hour, $date)
+    {
+        $oldSale = $this->preparedSales->where('sale.hour', $hour)->where('sale.date', $date)->pop();
+
+        $this->preparedSales->push([
+            'sale' => [
+                'machineid' => $oldSale['sale']['machineid'],
+                'batchid' => $oldSale['sale']['batchid'],
+                'date' => $oldSale['sale']['date'],
+                'hour' => $oldSale['sale']['hour'],
+                'receiptcount' => $oldSale['sale']['receiptcount'] + $sales->count(),
+                'gto' => $oldSale['sale']['gto'] + $sales->sum('gto'),
+                'gst' => $oldSale['sale']['gst'] + $sales->sum('gst'),
+                'discount' => $oldSale['sale']['discount'] + $sales->sum('discount'),
+                'servicecharge' => $oldSale['sale']['servicecharge'] + $sales->sum('servicecharge'),
+                'noofpax' => $oldSale['sale']['noofpax'] + $sales->sum('noofpax'),
+                ...array_map(function ($paymentType) use ($sales, $oldSale) {
+                    return $oldSale['sale'][$paymentType] + $sales->sum($paymentType);
+                }, $this->paymentTypes),
+                'gstregistered' => $oldSale['sale']['gstregistered'],
+            ],
+        ]);
     }
 }
