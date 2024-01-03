@@ -53,8 +53,15 @@ it('can send sales hourly data', function () {
     ]);
 
     $response = $client->sendSalesHourly([
-        // todo: add test data
-    ]);
+        [
+            'store_id' => 'test_store_id',
+            'date' => '2021-01-01',
+            'hour' => '00',
+            'payment_type' => 'cash',
+            'amount' => '100.00',
+            'quantity' => '1',
+        ],
+    ]); // no need of exact data I guess
 
     Http::assertSent(function ($request) {
         return $request->url() == 'http://example.com/SalesHourly';
