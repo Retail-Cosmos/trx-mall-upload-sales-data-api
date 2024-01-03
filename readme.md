@@ -30,6 +30,25 @@ return [
 
 ## Usage
 
+### example data
+
+```php
+$data = [
+    'happened_at' => '2023-01-01 00:00:00', 
+    "gto": 191.54,
+    "gst": 1.55,
+    "discount": 0,
+    "servicecharge": 5.00,
+    "noofpax": 0,
+    "cash": 8.97,
+    "tng": 0,
+    "visa": 76.78,
+    "mastercard": 0,
+    "amex": 47.80,
+    "voucher": 0,
+    "othersamount": 57.99,
+]
+```
 
 ## Testing
 
