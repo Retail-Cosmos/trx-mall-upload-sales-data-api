@@ -86,7 +86,7 @@ class TangentApiClient
             Cache::put(
                 'trx-mall-upload-sales-data-api-token',
                 $token,
-                $this->getExpiryPriorToToken($response->json('expires_in'), 5)
+                $this->getExpiryPriorToToken($response->json('expires_in'), minutes: 5)
             );
 
             return $token;
@@ -97,10 +97,10 @@ class TangentApiClient
 
     /**
      * if token expires in 10 minutes,
-     * we will get a new token $min minutes before it expires
+     * we will get a new token $minutes before it expires
      */
-    private function getExpiryPriorToToken(int $expiry, int $min): int
+    private function getExpiryPriorToToken(int $expiry, int $minutes): int
     {
-        return time() + $expiry - 60 * $min;
+        return time() + $expiry - 60 * $minutes;
     }
 }
