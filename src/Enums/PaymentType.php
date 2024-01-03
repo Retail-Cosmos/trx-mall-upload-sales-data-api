@@ -17,9 +17,12 @@ enum PaymentType: string
         return array_column(self::cases(), 'value');
     }
 
-    public static function __callStatic($name, $args)
+    /**
+     * @throws \Exception
+     */
+    public static function __callStatic($name, $args): string
     {
-        $cases = static::cases();
+        $cases = self::cases();
 
         foreach ($cases as $case) {
             if ($case->name === $name) {
@@ -27,6 +30,6 @@ enum PaymentType: string
             }
         }
 
-        throw new \Exception("No static method or enum constant '$name' in class " . static::class);
+        throw new \Exception("No static method or enum constant '$name' in class ".self::class);
     }
 }
