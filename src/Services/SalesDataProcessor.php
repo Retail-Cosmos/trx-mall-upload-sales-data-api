@@ -87,7 +87,9 @@ class SalesDataProcessor
             '*.discount' => $this->amountRules,
             '*.servicecharge' => $this->amountRules,
             '*.noofpax' => $this->integerRules,
-            ...array_fill_keys($this->paymentTypes, $this->amountRules),
+            ...array_fill_keys(array_map(function ($type) {
+                return '*.' . $type;
+            }, $this->paymentTypes), $this->amountRules),
         ]);
 
         if ($validator->fails()) {
