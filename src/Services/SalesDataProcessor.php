@@ -61,7 +61,7 @@ class SalesDataProcessor
         $sales->groupBy(function ($sale) {
             return Carbon::parse($sale['date'])->format('dmy');
         })->each(function ($sales, $date) use ($storeData) {
-            $this->createTwentyFourHoursForMachine($storeData, $date);
+            $this->createTwentyFourHoursSalesForStore($storeData, $date);
             $sales->groupBy(function ($sale) {
                 return Carbon::parse($sale['date'])->format('H');
             })->each(function ($sales, $hour) use ($date) {
@@ -88,7 +88,7 @@ class SalesDataProcessor
             '*.servicecharge' => $this->amountRules,
             '*.noofpax' => $this->integerRules,
             ...array_fill_keys(array_map(function ($type) {
-                return '*.' . $type;
+                return '*.'.$type;
             }, $this->paymentTypes), $this->amountRules),
         ]);
 
@@ -97,11 +97,13 @@ class SalesDataProcessor
         }
     }
 
-    private function createTwentyFourHoursForMachine($storeData, $date)
+    /**
+     * @param  array<string,mixed>  $storeData
+     */
+    private function createTwentyFourHoursSalesForStore(array $storeData, string $date): void
     {
-        $hours = [];
         for ($i = 0; $i < 24; $i++) {
-            $hours[$i] = ['sale' => [
+            $this->preparedSales->push(['sale' => [
                 'machineid' => $storeData['machineid'],
                 'batchid' => 1,
                 'date' => $date,
@@ -114,12 +116,14 @@ class SalesDataProcessor
                 'noofpax' => 0,
                 'gstregistered' => $storeData['gstregistered'],
                 ...array_fill_keys($this->paymentTypes, 0),
-            ]];
+            ]]);
         }
-        $this->preparedSales->push(...$hours);
     }
 
-    private function aggregateSalesForHour($sales, $hour, $date)
+    /**
+     * @param  Collection<int,mixed>  $sales
+     */
+    private function aggregateSalesForHour(Collection $sales, string $hour, string $date): void
     {
         $oldSale = $this->preparedSales->where('sale.hour', $hour)->where('sale.date', $date)->pop();
 
