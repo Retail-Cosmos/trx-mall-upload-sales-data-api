@@ -96,7 +96,7 @@ class TangentApiClient
     }
 
     /**
-     * if token expires in 10 minutes,
+     * if token expires in $expiry seconds,
      * we will get a new token $minutes before it expires
      */
     private function getExpiryPriorToToken(int $expiry, int $minutes): int
