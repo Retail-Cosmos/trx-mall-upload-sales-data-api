@@ -35,12 +35,12 @@ return [
 ```php
 $data = collect([
     [
-        'happened_at' => '2023-01-01 00:00:00',
+        'made_at' => '2023-01-01 00:00:00',
         'gto' => 191.54,
         'gst' => 1.55,
         'discount' => 0,
-        'servicecharge' => 5.00,
-        'noofpax' => 0,
+        'service_charge' => 5.00,
+        'no_of_persons' => 0,
         PaymentType::CASH() => 8.97,
         PaymentType::TNG() => 0,
         PaymentType::VISA() => 76.78,
@@ -49,12 +49,12 @@ $data = collect([
         PaymentType::VOUCHER() => 0,
         PaymentType::OTHERS() => 57.99,
     ], [
-        'happened_at' => '2023-01-01 00:00:00',
+        'made_at' => '2023-01-01 00:00:00',
         'gto' => 391.54,
         'gst' => 12.65,
         'discount' => 10,
-        'servicecharge' => 0.00,
-        'noofpax' => 0,
+        'service_charge' => 0.00,
+        'no_of_persons' => 0,
         PaymentType::CASH() => 18.97,
         PaymentType::TNG() => 0,
         PaymentType::VISA() => 176.78,
