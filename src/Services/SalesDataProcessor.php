@@ -5,6 +5,7 @@ namespace RetailCosmos\TrxMallUploadSalesDataApi\Services;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
+use RetailCosmos\TrxMallUploadSalesDataApi\Enums\PaymentType;
 
 class SalesDataProcessor
 {
@@ -37,15 +38,8 @@ class SalesDataProcessor
     {
         $this->preparedSales = new Collection();
 
-        $this->paymentTypes = [ // later PaymentType::values()
-            'cash',
-            'tng',
-            'visa',
-            'mastercard',
-            'amex',
-            'voucher',
-            'othersamount',
-        ];
+        $this->paymentTypes = PaymentType::values();
+
     }
 
     /**
