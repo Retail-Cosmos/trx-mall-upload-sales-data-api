@@ -4,6 +4,11 @@ namespace RetailCosmos\TrxMallUploadSalesDataApi\Services;
 
 class StoreDataProcessor
 {
+    /**
+     * @param  array<string,mixed>  $storeData
+     *
+     * @throws \Exception
+     */
     public function process(array $storeData): array
     {
         $this->validate($storeData);
@@ -21,9 +26,9 @@ class StoreDataProcessor
     private function validate(array $storeData): void
     {
         $validator = validator($storeData, [
-            '*.machine_id' => ['required','distinct','numeric','min:1'],
-            '*.store_identifier' => ['required','distinct'],
-            '*.gst_registered' => ['required','boolean'],
+            '*.machine_id' => ['required', 'distinct', 'numeric', 'min:1'],
+            '*.store_identifier' => ['required', 'distinct'],
+            '*.gst_registered' => ['required', 'boolean'],
         ]);
 
         if ($validator->fails()) {
