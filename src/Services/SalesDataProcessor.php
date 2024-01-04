@@ -128,10 +128,10 @@ class SalesDataProcessor
                 'date' => $oldSale['sale']['date'],
                 'hour' => $oldSale['sale']['hour'],
                 'receiptcount' => $oldSale['sale']['receiptcount'] + $sales->count(),
-                'gto' => round($oldSale['sale']['gto'] + $sales->sum('gto'),2),
-                'gst' => round($oldSale['sale']['gst'] + $sales->sum('gst'),2),
-                'discount' => round($oldSale['sale']['discount'] + $sales->sum('discount'),2),
-                'servicecharge' => round($oldSale['sale']['servicecharge'] + $sales->sum('servicecharge'),2),
+                'gto' => round($oldSale['sale']['gto'] + $sales->sum('gto'), 2),
+                'gst' => round($oldSale['sale']['gst'] + $sales->sum('gst'), 2),
+                'discount' => round($oldSale['sale']['discount'] + $sales->sum('discount'), 2),
+                'servicecharge' => round($oldSale['sale']['servicecharge'] + $sales->sum('servicecharge'), 2),
                 'noofpax' => $oldSale['sale']['noofpax'] + $sales->sum('noofpax'),
                 ...array_combine($this->paymentTypes, array_map(function ($paymentType) use ($sales, $oldSale) {
                     return round($oldSale['sale'][$paymentType] + $sales->sum($paymentType), 2);
