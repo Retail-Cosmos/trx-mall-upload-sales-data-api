@@ -3,7 +3,7 @@
 namespace RetailCosmos\TrxMallUploadSalesDataApi\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Log\Logger;
+use \Psr\Log\LoggerInterface;
 use Illuminate\Support\Facades\Log;
 
 class SendSalesCommand extends Command
@@ -22,7 +22,7 @@ class SendSalesCommand extends Command
      */
     protected $description = 'Send sales in hourly(00-23) format to Tangent API';
 
-    protected Logger $trxLogChannel;
+    protected LoggerInterface $trxLogChannel;
 
     public function __construct()
     {
