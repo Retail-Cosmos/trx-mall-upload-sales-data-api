@@ -20,6 +20,7 @@ it('has all required configuration available', function () {
     // check if all required keys are present
     expect(array_keys($config))->toEqual([
         'api',
+        'log',
     ]);
 
     // check if all required sub-keys are present
@@ -28,5 +29,9 @@ it('has all required configuration available', function () {
         'grant_type',
         'username',
         'password',
+    ]);
+
+    expect(array_keys($config['log']))->toEqual([
+        'channel',
     ]);
 });
