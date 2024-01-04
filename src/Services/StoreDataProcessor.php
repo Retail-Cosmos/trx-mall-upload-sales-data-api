@@ -21,9 +21,9 @@ class StoreDataProcessor
     private function validate(array $storeData): void
     {
         $validator = validator($storeData, [
-            '*.machine_id' => 'required|distinct',
-            '*.store_identifier' => 'required|distinct',
-            '*.gst_registered' => 'required|boolean',
+            '*.machine_id' => ['required','distinct','numeric','min:1'],
+            '*.store_identifier' => ['required','distinct'],
+            '*.gst_registered' => ['required','boolean'],
         ]);
 
         if ($validator->fails()) {
