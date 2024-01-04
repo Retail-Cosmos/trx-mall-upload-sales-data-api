@@ -45,6 +45,8 @@ class StoreDataProcessor
         foreach ($storeData as &$store) {
             $store['gstregistered'] = $store['gst_registered'] ? 'Y' : 'N';
             unset($store['gst_registered']);
+            $store['machineid'] = $store['machine_id'];
+            unset($store['machine_id']);
         }
     }
 }
