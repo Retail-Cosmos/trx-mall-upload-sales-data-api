@@ -68,3 +68,43 @@ it('transforms the sales data', function () {
         'gstregistered' => 'Y',
     ]);
 });
+
+it('throws exception when sales data is invalid', function () {
+    $sales = collect([
+        [
+            'happened_at' => '2023-02-01 00:00:00',
+            'gto' => 191.54,
+            'gst' => 1.55,
+            'discount' => 0,
+            'servicecharge' => 5.00,
+            'noofpax' => 0,
+            PaymentType::CASH() => 8.97,
+            PaymentType::TNG() => 0,
+            PaymentType::VISA() => 76.78,
+            PaymentType::MASTERCARD() => 0,
+            PaymentType::AMEX() => 47.80,
+            PaymentType::VOUCHER() => 0,
+            PaymentType::OTHERS() => 57.99,
+        ], [
+            'happened_at' => '2023-02-01 00:00:00',
+            'gst' => 12.65,
+            'discount' => 10,
+            'servicecharge' => 0.00,
+            'noofpax' => 0,
+            PaymentType::CASH() => 18.97,
+            PaymentType::TNG() => 0,
+            PaymentType::VISA() => 176.78,
+            PaymentType::MASTERCARD() => 0,
+            PaymentType::AMEX() => 47.80,
+            PaymentType::VOUCHER() => 0,
+            PaymentType::OTHERS() => 0,
+        ],
+    ]);
+    $storeData = [
+        'machineid' => '123',
+        'gstregistered' => 'Y',
+    ];
+
+    $processor = new SalesDataProcessor();
+    $processor->process($sales, $storeData);
+})->throws(\Exception::class, 'The 1.gto field is required.');
