@@ -38,7 +38,8 @@ class StoreDataProcessor
     private function prepare(array &$storeData): void
     {
         foreach ($storeData as &$store) {
-            $store['gst_registered'] = $store['gst_registered'] ? 'Y' : 'N';
+            $store['gstregistered'] = $store['gst_registered'] ? 'Y' : 'N';
+            unset($store['gst_registered']);
         }
     }
 }
