@@ -53,7 +53,7 @@ class SalesDataProcessor
         $this->validate($sales->toArray());
 
         $sales->groupBy(function ($sale) {
-            return Carbon::parse($sale['happened_at'])->format('dmy');
+            return Carbon::parse($sale['happened_at'])->format('Ymd');
         })->each(function ($sales, $date) use ($storeData) {
             $this->createTwentyFourHoursSalesForStore($storeData, $date);
             $sales->groupBy(function ($sale) {
@@ -120,9 +120,6 @@ class SalesDataProcessor
     private function aggregateSalesForHour(Collection $sales, string $hour, string $date): void
     {
         $oldSale = $this->preparedSales->pull($this->preparedSales->where('sale.hour', $hour)->where('sale.date', $date)->keys()->first());
-        $paymentTypeTotals = array_combine($this->paymentTypes, array_map(function ($paymentType) use ($sales, $oldSale) {
-            return $oldSale['sale'][$paymentType] + $sales->sum($paymentType);
-        }, $this->paymentTypes));
 
         $this->preparedSales->push([
             'sale' => [
@@ -131,13 +128,15 @@ class SalesDataProcessor
                 'date' => $oldSale['sale']['date'],
                 'hour' => $oldSale['sale']['hour'],
                 'receiptcount' => $oldSale['sale']['receiptcount'] + $sales->count(),
-                'gto' => $oldSale['sale']['gto'] + $sales->sum('gto'),
-                'gst' => $oldSale['sale']['gst'] + $sales->sum('gst'),
-                'discount' => $oldSale['sale']['discount'] + $sales->sum('discount'),
-                'servicecharge' => $oldSale['sale']['servicecharge'] + $sales->sum('servicecharge'),
+                'gto' => round($oldSale['sale']['gto'] + $sales->sum('gto'),2),
+                'gst' => round($oldSale['sale']['gst'] + $sales->sum('gst'),2),
+                'discount' => round($oldSale['sale']['discount'] + $sales->sum('discount'),2),
+                'servicecharge' => round($oldSale['sale']['servicecharge'] + $sales->sum('servicecharge'),2),
                 'noofpax' => $oldSale['sale']['noofpax'] + $sales->sum('noofpax'),
+                ...array_combine($this->paymentTypes, array_map(function ($paymentType) use ($sales, $oldSale) {
+                    return round($oldSale['sale'][$paymentType] + $sales->sum($paymentType), 2);
+                }, $this->paymentTypes)),
                 'gstregistered' => $oldSale['sale']['gstregistered'],
-                ...$paymentTypeTotals,
             ],
         ]);
 
