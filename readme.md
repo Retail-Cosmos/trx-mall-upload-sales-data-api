@@ -33,21 +33,38 @@ return [
 ### example data
 
 ```php
-$data = [
-    'happened_at' => '2023-01-01 00:00:00', 
-    "gto": 191.54,
-    "gst": 1.55,
-    "discount": 0,
-    "servicecharge": 5.00,
-    "noofpax": 0,
-    "cash": 8.97,
-    "tng": 0,
-    "visa": 76.78,
-    "mastercard": 0,
-    "amex": 47.80,
-    "voucher": 0,
-    "othersamount": 57.99,
-]
+$data = collect([
+    [
+        'happened_at' => '2023-01-01 00:00:00',
+        'gto' => 191.54,
+        'gst' => 1.55,
+        'discount' => 0,
+        'servicecharge' => 5.00,
+        'noofpax' => 0,
+        PaymentType::CASH() => 8.97,
+        PaymentType::TNG() => 0,
+        PaymentType::VISA() => 76.78,
+        PaymentType::MASTERCARD() => 0,
+        PaymentType::AMEX() => 47.80,
+        PaymentType::VOUCHER() => 0,
+        PaymentType::OTHERS() => 57.99,
+    ], [
+        'happened_at' => '2023-01-01 00:00:00',
+        'gto' => 391.54,
+        'gst' => 12.65,
+        'discount' => 10,
+        'servicecharge' => 0.00,
+        'noofpax' => 0,
+        PaymentType::CASH() => 18.97,
+        PaymentType::TNG() => 0,
+        PaymentType::VISA() => 176.78,
+        PaymentType::MASTERCARD() => 0,
+        PaymentType::AMEX() => 47.80,
+        PaymentType::VOUCHER() => 0,
+        PaymentType::OTHERS() => 0,
+    ],
+]);
+
 ```
 
 ## Testing
