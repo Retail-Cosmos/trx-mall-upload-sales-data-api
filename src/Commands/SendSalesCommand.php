@@ -2,9 +2,11 @@
 
 namespace RetailCosmos\TrxMallUploadSalesDataApi\Commands;
 
+use App\Services\TrxMallUploadSalesDataApiSalesService;
 use Illuminate\Console\Command;
-use \Psr\Log\LoggerInterface;
 use Illuminate\Support\Facades\Log;
+use Psr\Log\LoggerInterface;
+use RetailCosmos\TrxMallUploadSalesDataApi\Contracts\TrxSalesService;
 use RetailCosmos\TrxMallUploadSalesDataApi\Enums\PaymentType;
 
 class SendSalesCommand extends Command
@@ -41,7 +43,7 @@ class SendSalesCommand extends Command
         try {
             validator([
                 'date' => $this->argument('date'),
-            ],[
+            ], [
                 'date' => 'nullable|date_format:Y-m-d',
             ])->validate();
 
@@ -95,49 +97,16 @@ class SendSalesCommand extends Command
 
     private function getStoreData(string $storeIdentifier): array
     {
-        $storeData = [
-            'machineid' => '123',
-            'gstregistered' => 'Y',
-        ];
+        $trxSalesService = resolve(TrxMallUploadSalesDataApiSalesService::class);
 
-        return $storeData;
+        return $trxSalesService->getStoreData($storeIdentifier);
     }
 
     private function getSalesData(string $date, string $storeIdentifier): array
     {
-        $sales = [
-            [
-                'happened_at' => '2023-02-01 00:00:00',
-                'net_amount' => 191.54,
-                'gst' => 1.55,
-                'discount' => 0,
-                'payments' => [
-                    PaymentType::CASH() => 8.97,
-                    PaymentType::TNG() => 0,
-                    PaymentType::VISA() => 76.78,
-                    PaymentType::MASTERCARD() => 0,
-                    PaymentType::AMEX() => 47.80,
-                    PaymentType::VOUCHER() => 0,
-                    PaymentType::OTHERS() => 57.99,
-                ],
-            ], [
-                'happened_at' => '2023-02-01 00:00:00',
-                'net_amount' => 391.54,
-                'gst' => 12.65,
-                'discount' => 10,
-                'payments' => [
-                    PaymentType::CASH() => 18.97,
-                    PaymentType::TNG() => 0,
-                    PaymentType::VISA() => 176.78,
-                    PaymentType::MASTERCARD() => 0,
-                    PaymentType::AMEX() => 47.80,
-                    PaymentType::VOUCHER() => 0,
-                    PaymentType::OTHERS() => 0,
-                ],
-            ],
-        ];
+        $trxSalesService = resolve(TrxMallUploadSalesDataApiSalesService::class);
 
-        return $sales;
+        return $trxSalesService->getSalesData($date, $storeIdentifier)->toArray();
     }
 
     private function processSalesData(array $sales, array $storeData): array
@@ -168,10 +137,8 @@ class SendSalesCommand extends Command
         return $processedSales;
     }
 
-
     private function sendSalesData(array $sales): void
     {
 
     }
-
 }
