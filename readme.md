@@ -30,6 +30,22 @@ return [
 
 ## Usage
 
+### example store data
+```php
+$storeData = [
+    [
+        'machine_id' => '123',
+        'store_identifier' => 'store1',
+        'gst_registered' => true,
+    ],
+    [
+        'machine_id' => '456',
+        'store_identifier' => 'store2',
+        'gst_registered' => false,
+    ],
+];
+
+```
 ### example data
 
 ```php
@@ -64,8 +80,8 @@ $data = collect([
         PaymentType::OTHERS() => 0,
     ],
 ]);
-
 ```
+
 
 ## Testing
 
