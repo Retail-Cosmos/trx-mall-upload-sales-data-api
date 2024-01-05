@@ -30,16 +30,17 @@ class SalesDataProcessor
     private array $paymentTypes;
 
     /**
+     * pass date in Y-m-d format
+     *
      * @var Collection<int,mixed>
      */
     private Collection $preparedSales;
 
-    public function __construct()
+    public function __construct(private string $date)
     {
         $this->preparedSales = new Collection();
 
         $this->paymentTypes = PaymentType::values();
-
     }
 
     /**
@@ -52,15 +53,12 @@ class SalesDataProcessor
     {
         $this->validate($sales->toArray());
 
+        $this->createTwentyFourHoursSalesForStore($storeData);
+
         $sales->groupBy(function ($sale) {
-            return Carbon::parse($sale['happened_at'])->format('Ymd');
-        })->each(function ($sales, $date) use ($storeData) {
-            $this->createTwentyFourHoursSalesForStore($storeData, $date);
-            $sales->groupBy(function ($sale) {
-                return Carbon::parse($sale['happened_at'])->format('H');
-            })->each(function ($sales, $hour) use ($date) {
-                $this->aggregateSalesForHour($sales, $hour, $date);
-            });
+            return Carbon::parse($sale['happened_at'])->format('H');
+        })->each(function ($sales, $hour) {
+            $this->aggregateSalesForHour($sales, $hour);
         });
 
         return $this->preparedSales->values()->all();
@@ -76,7 +74,11 @@ class SalesDataProcessor
     private function validate(array $sales): void
     {
         $validator = Validator::make($sales, [
-            '*.happened_at' => ['required', 'date_format:Y-m-d H:i:s'],
+            '*.happened_at' => ['required', 'date_format:Y-m-d H:i:s', function ($attribute, $value, $fail) {
+                if (Carbon::parse($value)->format('Y-m-d') !== $this->date) {
+                    $fail('this sale is not on the date given');
+                }
+            }],
             '*.gst' => $this->amountRules,
             '*.net_amount' => $this->amountRules,
             '*.discount' => $this->amountRules,
@@ -94,8 +96,9 @@ class SalesDataProcessor
     /**
      * @param  array<string,mixed>  $storeData
      */
-    private function createTwentyFourHoursSalesForStore(array $storeData, string $date): void
+    private function createTwentyFourHoursSalesForStore(array $storeData): void
     {
+        $date = Carbon::parse($this->date)->format('Ymd');
         for ($i = 0; $i < 24; $i++) {
             $this->preparedSales->push(['sale' => [
                 'machineid' => $storeData['machineid'],
@@ -115,8 +118,9 @@ class SalesDataProcessor
     /**
      * @param  Collection<int,mixed>  $sales
      */
-    private function aggregateSalesForHour(Collection $sales, string $hour, string $date): void
+    private function aggregateSalesForHour(Collection $sales, string $hour): void
     {
+        $date = Carbon::parse($this->date)->format('Ymd');
         $oldSale = $this->preparedSales->pull($this->preparedSales->where('sale.hour', $hour)->where('sale.date', $date)->keys()->first());
 
         $this->preparedSales->push([

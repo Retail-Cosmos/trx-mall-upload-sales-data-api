@@ -40,7 +40,7 @@ it('transforms the sales data', function () {
         'gstregistered' => 'Y',
     ];
 
-    $processor = new SalesDataProcessor();
+    $processor = new SalesDataProcessor('2023-02-01');
     $result = $processor->process($sales, $storeData);
 
     expect(count($result))->toBe(24);
@@ -103,6 +103,6 @@ it('throws exception when sales data is invalid', function () {
         'gstregistered' => 'Y',
     ];
 
-    $processor = new SalesDataProcessor();
+    $processor = new SalesDataProcessor('2023-02-01');
     $processor->process($sales, $storeData);
 })->throws(\Exception::class);
