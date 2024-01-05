@@ -71,6 +71,8 @@ it('can send sales hourly data', function () {
 });
 
 it('returns a valid token from cache', function () {
+    Http::fake();
+
     Cache::shouldReceive('get')
         ->with('trx-mall-upload-sales-data-api-token')
         ->andReturn('cached_token');
