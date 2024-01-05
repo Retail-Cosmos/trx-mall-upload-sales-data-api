@@ -30,7 +30,7 @@ return [
 
 ## Usage
 
-example store data
+### example store data
 ```php
 $storeData = [
     [
@@ -46,6 +46,42 @@ $storeData = [
 ];
 
 ```
+### example data
+
+```php
+$data = collect([
+    [
+        'happened_at' => '2023-01-01 00:00:00',
+        'net_amount' => 191.54,
+        'gst' => 1.55,
+        'discount' => 0,
+        'payments' => [
+            PaymentType::CASH() => 8.97,
+            PaymentType::TNG() => 0,
+            PaymentType::VISA() => 76.78,
+            PaymentType::MASTERCARD() => 0,
+            PaymentType::AMEX() => 47.80,
+            PaymentType::VOUCHER() => 0,
+            PaymentType::OTHERS() => 57.99,
+        ],
+    ], [
+        'happened_at' => '2023-01-01 00:00:00',
+        'net_amount' => 391.54,
+        'gst' => 12.65,
+        'discount' => 10,
+        'payments' => [
+            PaymentType::CASH() => 18.97,
+            PaymentType::TNG() => 0,
+            PaymentType::VISA() => 176.78,
+            PaymentType::MASTERCARD() => 0,
+            PaymentType::AMEX() => 47.80,
+            PaymentType::VOUCHER() => 0,
+            PaymentType::OTHERS() => 0,
+        ],
+    ],
+]);
+```
+
 
 ## Testing
 
