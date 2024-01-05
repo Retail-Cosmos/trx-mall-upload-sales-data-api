@@ -39,7 +39,13 @@ class SendSalesCommand extends Command
         $this->info($message);
 
         try {
-            $date = $this->argument('date') ?? now()->format('Y-m-d');
+            validator([
+                'date' => $this->argument('date'),
+            ],[
+                'date' => 'nullable|date_format:Y-m-d',
+            ])->validate();
+
+            $date = $this->argument('date') ?? now()->subDay()->format('Y-m-d');
 
             $storeIdentifier = $this->option('store_identifier');
 
