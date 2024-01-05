@@ -18,15 +18,6 @@ class SalesDataProcessor
         'min:0',
     ];
 
-    /**
-     * @var array<int,string>
-     */
-    private array $integerRules = [
-        'required',
-        'integer',
-        'min:0',
-    ];
-
     private array $paymentTypes;
 
     /**
