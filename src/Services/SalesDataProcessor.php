@@ -81,7 +81,6 @@ class SalesDataProcessor
             '*.gto' => $this->amountRules,
             '*.discount' => $this->amountRules,
             '*.service_charge' => $this->amountRules,
-            '*.no_of_persons' => $this->integerRules,
             ...array_fill_keys(array_map(function ($type) {
                 return '*.'.$type;
             }, $this->paymentTypes), $this->amountRules),
@@ -133,7 +132,7 @@ class SalesDataProcessor
                 'gst' => round($oldSale['sale']['gst'] + $sales->sum('gst'), 2),
                 'discount' => round($oldSale['sale']['discount'] + $sales->sum('discount'), 2),
                 'servicecharge' => round($oldSale['sale']['servicecharge'] + $sales->sum('service_charge'), 2),
-                'noofpax' => $oldSale['sale']['noofpax'] + $sales->sum('no_of_persons'),
+                'noofpax' => $oldSale['sale']['noofpax'],
                 ...array_combine($this->paymentTypes, array_map(function ($paymentType) use ($sales, $oldSale) {
                     return round($oldSale['sale'][$paymentType] + $sales->sum($paymentType), 2);
                 }, $this->paymentTypes)),
