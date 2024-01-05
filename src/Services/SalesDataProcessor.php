@@ -78,7 +78,7 @@ class SalesDataProcessor
         $validator = Validator::make($sales, [
             '*.happened_at' => ['required', 'date_format:Y-m-d H:i:s'],
             '*.gst' => $this->amountRules,
-            '*.gto' => $this->amountRules,
+            '*.net_amount' => $this->amountRules,
             '*.discount' => $this->amountRules,
             '*.payments' => ['required', 'array'],
             ...array_fill_keys(array_map(function ($type) {
@@ -126,7 +126,7 @@ class SalesDataProcessor
                 'date' => $oldSale['sale']['date'],
                 'hour' => $oldSale['sale']['hour'],
                 'receiptcount' => $oldSale['sale']['receiptcount'] + $sales->count(),
-                'gto' => round($oldSale['sale']['gto'] + $sales->sum('gto'), 2),
+                'gto' => round($oldSale['sale']['gto'] + $sales->sum('net_amount'), 2),
                 'gst' => round($oldSale['sale']['gst'] + $sales->sum('gst'), 2),
                 'discount' => round($oldSale['sale']['discount'] + $sales->sum('discount'), 2),
                 ...array_combine($this->paymentTypes, array_map(function ($paymentType) use ($sales, $oldSale) {

@@ -7,7 +7,7 @@ it('transforms the sales data', function () {
     $sales = collect([
         [
             'happened_at' => '2023-02-01 00:00:00',
-            'gto' => 191.54,
+            'net_amount' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
             'payments' => [
@@ -21,7 +21,7 @@ it('transforms the sales data', function () {
             ],
         ], [
             'happened_at' => '2023-02-01 00:00:00',
-            'gto' => 391.54,
+            'net_amount' => 391.54,
             'gst' => 12.65,
             'discount' => 10,
             'payments' => [
@@ -71,7 +71,7 @@ it('throws exception when sales data is invalid', function () {
     $sales = collect([
         [
             'happened_at' => '2023-01-01 00:00:00',
-            'gto' => 191.54,
+            'net_amount' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
             'payments' => [
