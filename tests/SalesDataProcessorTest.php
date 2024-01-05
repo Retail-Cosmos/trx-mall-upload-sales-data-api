@@ -10,7 +10,6 @@ it('transforms the sales data', function () {
             'gto' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
-            'service_charge' => 5.00,
             'payments' => [
                 PaymentType::CASH() => 8.97,
                 PaymentType::TNG() => 0,
@@ -25,7 +24,6 @@ it('transforms the sales data', function () {
             'gto' => 391.54,
             'gst' => 12.65,
             'discount' => 10,
-            'service_charge' => 0.00,
             'payments' => [
                 PaymentType::CASH() => 18.97,
                 PaymentType::TNG() => 0,
@@ -58,8 +56,6 @@ it('transforms the sales data', function () {
         'gto' => 583.08,
         'gst' => 14.20,
         'discount' => 10.00,
-        'servicecharge' => 5.00,
-        'noofpax' => 0,
         PaymentType::CASH() => 27.94,
         PaymentType::TNG() => 0.00,
         PaymentType::VISA() => 253.56,
@@ -78,7 +74,6 @@ it('throws exception when sales data is invalid', function () {
             'gto' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
-            'service_charge' => 5.00,
             'payments' => [
                 PaymentType::CASH() => 8.97,
                 PaymentType::TNG() => 0,
@@ -92,7 +87,6 @@ it('throws exception when sales data is invalid', function () {
             'happened_at' => '2023-01-01 00:00:00',
             'gst' => 12.65,
             'discount' => 10,
-            'service_charge' => 0.00,
             'payments' => [
                 PaymentType::CASH() => 18.97,
                 PaymentType::TNG() => 0,

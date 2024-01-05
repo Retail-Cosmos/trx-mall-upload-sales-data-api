@@ -80,7 +80,6 @@ class SalesDataProcessor
             '*.gst' => $this->amountRules,
             '*.gto' => $this->amountRules,
             '*.discount' => $this->amountRules,
-            '*.service_charge' => $this->amountRules,
             '*.payments' => ['required', 'array'],
             ...array_fill_keys(array_map(function ($type) {
                 return '*.payments.'.$type;
@@ -107,8 +106,6 @@ class SalesDataProcessor
                 'gto' => 0,
                 'gst' => 0,
                 'discount' => 0,
-                'servicecharge' => 0,
-                'noofpax' => 0,
                 'gstregistered' => $storeData['gstregistered'],
                 ...array_fill_keys($this->paymentTypes, 0),
             ]]);
@@ -132,8 +129,6 @@ class SalesDataProcessor
                 'gto' => round($oldSale['sale']['gto'] + $sales->sum('gto'), 2),
                 'gst' => round($oldSale['sale']['gst'] + $sales->sum('gst'), 2),
                 'discount' => round($oldSale['sale']['discount'] + $sales->sum('discount'), 2),
-                'servicecharge' => round($oldSale['sale']['servicecharge'] + $sales->sum('service_charge'), 2),
-                'noofpax' => $oldSale['sale']['noofpax'],
                 ...array_combine($this->paymentTypes, array_map(function ($paymentType) use ($sales, $oldSale) {
                     return round($oldSale['sale'][$paymentType] + $sales->sum('payments.'.$paymentType), 2);
                 }, $this->paymentTypes)),
