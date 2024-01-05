@@ -53,11 +53,11 @@ class SalesDataProcessor
         $this->validate($sales->toArray());
 
         $sales->groupBy(function ($sale) {
-            return Carbon::parse($sale['made_at'])->format('Ymd');
+            return Carbon::parse($sale['happened_at'])->format('Ymd');
         })->each(function ($sales, $date) use ($storeData) {
             $this->createTwentyFourHoursSalesForStore($storeData, $date);
             $sales->groupBy(function ($sale) {
-                return Carbon::parse($sale['made_at'])->format('H');
+                return Carbon::parse($sale['happened_at'])->format('H');
             })->each(function ($sales, $hour) use ($date) {
                 $this->aggregateSalesForHour($sales, $hour, $date);
             });
@@ -76,7 +76,7 @@ class SalesDataProcessor
     private function validate(array $sales): void
     {
         $validator = Validator::make($sales, [
-            '*.made_at' => ['required', 'date_format:Y-m-d H:i:s'],
+            '*.happened_at' => ['required', 'date_format:Y-m-d H:i:s'],
             '*.gst' => $this->amountRules,
             '*.gto' => $this->amountRules,
             '*.discount' => $this->amountRules,

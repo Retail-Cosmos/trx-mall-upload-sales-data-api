@@ -6,7 +6,7 @@ use RetailCosmos\TrxMallUploadSalesDataApi\Services\SalesDataProcessor;
 it('transforms the sales data', function () {
     $sales = collect([
         [
-            'made_at' => '2023-02-01 00:00:00',
+            'happened_at' => '2023-02-01 00:00:00',
             'gto' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
@@ -20,7 +20,7 @@ it('transforms the sales data', function () {
             PaymentType::VOUCHER() => 0,
             PaymentType::OTHERS() => 57.99,
         ], [
-            'made_at' => '2023-02-01 00:00:00',
+            'happened_at' => '2023-02-01 00:00:00',
             'gto' => 391.54,
             'gst' => 12.65,
             'discount' => 10,
@@ -72,7 +72,7 @@ it('transforms the sales data', function () {
 it('throws exception when sales data is invalid', function () {
     $sales = collect([
         [
-            'made_at' => '2023-02-01 00:00:00',
+            'happened_at' => '2023-02-01 00:00:00',
             'gto' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
@@ -86,7 +86,7 @@ it('throws exception when sales data is invalid', function () {
             PaymentType::VOUCHER() => 0,
             PaymentType::OTHERS() => 57.99,
         ], [
-            'made_at' => '2023-02-01 00:00:00',
+            'happened_at' => '2023-02-01 00:00:00',
             'gst' => 12.65,
             'discount' => 10,
             'service_charge' => 0.00,

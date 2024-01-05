@@ -51,7 +51,7 @@ $storeData = [
 ```php
 $data = collect([
     [
-        'made_at' => '2023-01-01 00:00:00',
+        'happened_at' => '2023-01-01 00:00:00',
         'gto' => 191.54,
         'gst' => 1.55,
         'discount' => 0,
@@ -65,7 +65,7 @@ $data = collect([
         PaymentType::VOUCHER() => 0,
         PaymentType::OTHERS() => 57.99,
     ], [
-        'made_at' => '2023-01-01 00:00:00',
+        'happened_at' => '2023-01-01 00:00:00',
         'gto' => 391.54,
         'gst' => 12.65,
         'discount' => 10,
