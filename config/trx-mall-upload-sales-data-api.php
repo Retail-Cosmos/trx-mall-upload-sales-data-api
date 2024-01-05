@@ -1,13 +1,10 @@
 <?php
 
 return [
+
     /**
-     * Configuration for the TRX Mall Upload Sales Data API.
-     *
      * This configuration specifies the base URI, grant type, username, and password
      * for accessing the TRX Mall API.
-     *
-     * @var array
      */
     'api' => [
         'base_uri' => env('TRX_MALL_API_BASE_URI'),
@@ -17,10 +14,15 @@ return [
     ],
 
     /**
-     * Configuration for the trx-mall-upload-sales-data-api.
-     *
-     * This file contains the configuration options for the trx-mall-upload-sales-data-api.
-     * The 'log' option specifies the channel to be used for logging, with a default value of 'stack'.
+     * this date will help us to determine batch_id
+     * for first date it will be 1 then 2 and so on
+     * this date should be in Y-m-d format
+     */
+    'date_of_first_sales' => env('TRX_MALL_DATE_OF_FIRST_SALES', '2023-01-01'),
+
+    /**
+     * The 'log' option specifies the channel to be used for logging,
+     * with a default value of 'stack'.
      */
     'log' => [
         'channel' => env('TRX_MALL_LOG_CHANNEL', 'stack'),
