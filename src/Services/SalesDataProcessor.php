@@ -113,7 +113,7 @@ class SalesDataProcessor
         foreach ($this->preparedSales as &$sale) {
             if ($sale['sale']['hour'] === (int) $hour) {
                 if ($sale['sale']['hour'] === (int) $hour) {
-                    $sale['sale']['receiptcount'] += $sales->count();
+                    $sale['sale']['receiptcount'] = $sales->count();
                     $sale['sale']['gto'] = round($sales->sum('net_amount'), 2);
                     $sale['sale']['gst'] = round($sales->sum('gst'), 2);
                     $sale['sale']['discount'] = round($sales->sum('discount'), 2);
