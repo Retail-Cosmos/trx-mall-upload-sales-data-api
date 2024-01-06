@@ -21,17 +21,15 @@ class SalesDataProcessor
     private array $paymentTypes;
 
     /**
-     * @var Collection<int,mixed>
+     * @var array<int,mixed>
      */
-    private Collection $preparedSales;
+    private array $preparedSales = [];
 
     /**
      * pass date in Y-m-d format
      */
     public function __construct(private string $date)
     {
-        $this->preparedSales = new Collection();
-
         $this->paymentTypes = PaymentType::values();
     }
 
@@ -53,7 +51,7 @@ class SalesDataProcessor
             $this->aggregateSalesForHour($sales, $hour);
         });
 
-        return $this->preparedSales->values()->all();
+        return $this->preparedSales;
     }
 
     /**
@@ -92,7 +90,7 @@ class SalesDataProcessor
     {
         $date = Carbon::parse($this->date)->format('Ymd');
         for ($i = 0; $i < 24; $i++) {
-            $this->preparedSales->push(['sale' => [
+            $this->preparedSales[] = ['sale' => [
                 'machineid' => $storeData['machineid'],
                 'batchid' => 1,
                 'date' => $date,
@@ -103,7 +101,7 @@ class SalesDataProcessor
                 'discount' => 0,
                 ...array_fill_keys($this->paymentTypes, 0),
                 'gstregistered' => $storeData['gstregistered'],
-            ]]);
+            ]];
         }
     }
 
@@ -112,19 +110,18 @@ class SalesDataProcessor
      */
     private function aggregateSalesForHour(Collection $sales, string $hour): void
     {
-        $this->preparedSales->transform(function ($sale) use ($sales, $hour) {
+        foreach ($this->preparedSales as &$sale) {
             if ($sale['sale']['hour'] === (int) $hour) {
-                $sale['sale']['receiptcount'] += $sales->count();
-                $sale['sale']['gto'] = round($sales->sum('net_amount'), 2);
-                $sale['sale']['gst'] = round($sales->sum('gst'), 2);
-                $sale['sale']['discount'] = round($sales->sum('discount'), 2);
-                foreach ($this->paymentTypes as $paymentType) {
-                    $sale['sale'][$paymentType] = round($sales->sum('payments.'.$paymentType), 2);
+                if ($sale['sale']['hour'] === (int) $hour) {
+                    $sale['sale']['receiptcount'] += $sales->count();
+                    $sale['sale']['gto'] = round($sales->sum('net_amount'), 2);
+                    $sale['sale']['gst'] = round($sales->sum('gst'), 2);
+                    $sale['sale']['discount'] = round($sales->sum('discount'), 2);
+                    foreach ($this->paymentTypes as $paymentType) {
+                        $sale['sale'][$paymentType] = round($sales->sum('payments.'.$paymentType), 2);
+                    }
                 }
             }
-
-            return $sale;
-        });
-
+        }
     }
 }
