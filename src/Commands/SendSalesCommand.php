@@ -6,7 +6,6 @@ use App\Services\TrxMallUploadSalesDataApiSalesService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Psr\Log\LoggerInterface;
-use RetailCosmos\TrxMallUploadSalesDataApi\Contracts\TrxSalesService;
 use RetailCosmos\TrxMallUploadSalesDataApi\Enums\PaymentType;
 
 class SendSalesCommand extends Command

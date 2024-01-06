@@ -7,7 +7,7 @@ use RetailCosmos\TrxMallUploadSalesDataApi\Contracts\TrxSalesService;
 
 class TrxMallUploadSalesDataApiSalesService implements TrxSalesService
 {
-    public function getStoreData(string $storeIdentifier): array
+    public function getStoreData(?string $storeIdentifier = null): array
     {
         return [];
     }
