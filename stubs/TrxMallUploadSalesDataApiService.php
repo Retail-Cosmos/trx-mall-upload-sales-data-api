@@ -34,7 +34,7 @@ class TrxMallUploadSalesDataApiService implements TrxSalesService
     {
         return collect([
             [
-                'happened_at' => '2023-01-01 00:00:00',
+                'happened_at' => '2024-01-01 00:00:00',
                 'net_amount' => 191.54,
                 'gst' => 1.55,
                 'discount' => 0,
@@ -48,7 +48,7 @@ class TrxMallUploadSalesDataApiService implements TrxSalesService
                     PaymentType::OTHERS() => 57.99,
                 ],
             ], [
-                'happened_at' => '2023-01-01 00:00:00',
+                'happened_at' => '2024-01-01 00:00:00',
                 'net_amount' => 391.54,
                 'gst' => 12.65,
                 'discount' => 10,
