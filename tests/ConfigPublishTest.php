@@ -21,6 +21,7 @@ it('has all required configuration available', function () {
     expect(array_keys($config))->toEqual([
         'api',
         'log',
+        'notifications',
     ]);
 
     // check if all required sub-keys are present
@@ -33,5 +34,14 @@ it('has all required configuration available', function () {
 
     expect(array_keys($config['log']))->toEqual([
         'channel',
+    ]);
+
+    expect(array_keys($config['notifications']))->toEqual([
+        'mail',
+    ]);
+
+    expect(array_keys($config['notifications']['mail']))->toEqual([
+        'name',
+        'email',
     ]);
 });
