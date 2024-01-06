@@ -46,6 +46,10 @@ class SendSalesCommand extends Command
                 'date' => 'nullable|date_format:Y-m-d',
             ])->validate();
 
+            $this->info('validating config');
+
+            $this->validateConfig();
+
             $date = $this->argument('date') ?? now()->subDay()->format('Y-m-d');
 
             $storeIdentifier = $this->option('store_identifier');
@@ -89,6 +93,20 @@ class SendSalesCommand extends Command
             $this->error($e->getMessage());
 
             return 1;
+        }
+    }
+
+    private function validateConfig():void{
+        $validator = validator(config('trx_mall_upload_sales_data_api'), [
+            'log.channel' => 'required|string',
+            'tangent_api_client.base_uri' => 'required|url',
+            'tangent_api_client.grant_type' => 'required|string',
+            'tangent_api_client.username' => 'required|string',
+            'tangent_api_client.password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first());
         }
     }
 
