@@ -111,9 +111,8 @@ class SalesDataProcessor
      */
     private function aggregateSalesForHour(Collection $sales, string $hour): void
     {
-        $date = Carbon::parse($this->date)->format('Ymd');
-        $this->preparedSales->transform(function ($sale) use ($sales, $hour, $date) {
-            if ($sale['sale']['hour'] === (int) $hour && $sale['sale']['date'] === $date) {
+        $this->preparedSales->transform(function ($sale) use ($sales, $hour) {
+            if ($sale['sale']['hour'] === (int) $hour) {
                 $sale['sale']['receiptcount'] += $sales->count();
                 $sale['sale']['gto'] = round($sales->sum('net_amount'), 2);
                 $sale['sale']['gst'] = round($sales->sum('gst'), 2);
