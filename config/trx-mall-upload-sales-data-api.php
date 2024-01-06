@@ -31,9 +31,9 @@ return [
      * mail.name and mail.email are used for the recipient
      */
     'notifications' => [
-        'mail' =>[
+        'mail' => [
             'name' => env('TRX_MALL_API_MAIL_NAME'),
             'email' => env('TRX_MALL_API_MAIL_EMAIL'),
-        ]
+        ],
     ],
 ];
