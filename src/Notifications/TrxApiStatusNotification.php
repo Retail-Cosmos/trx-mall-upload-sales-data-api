@@ -36,7 +36,7 @@ class TrxApiStatusNotification extends Notification
     public function toMail(object $notifiable)
     {
         return (new MailMessage)
-            ->subject('Trx Mall Sales Status Notification')
+            ->subject('TRX Mall Sales Data Upload Status Notification')
             ->markdown('trx-mall-upload-sales-data-api::mail.api-status', ['status' => $this->status, 'messages' => $this->messages]);
     }
 }
