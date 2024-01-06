@@ -21,12 +21,13 @@ class SalesDataProcessor
     private array $paymentTypes;
 
     /**
-     * pass date in Y-m-d format
-     *
      * @var Collection<int,mixed>
      */
     private Collection $preparedSales;
 
+    /**
+     * pass date in Y-m-d format
+     */
     public function __construct(private string $date)
     {
         $this->preparedSales = new Collection();
