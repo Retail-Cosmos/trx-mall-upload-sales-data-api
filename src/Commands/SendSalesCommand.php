@@ -96,7 +96,8 @@ class SendSalesCommand extends Command
         }
     }
 
-    private function validateConfig():void{
+    private function validateConfig(): void
+    {
         $validator = validator(config('trx_mall_upload_sales_data_api'), [
             'log.channel' => 'required|string',
             'tangent_api_client.base_uri' => 'required|url',
