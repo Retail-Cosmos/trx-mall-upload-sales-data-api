@@ -6,6 +6,7 @@ use App\Services\TrxMallUploadSalesDataApiService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Psr\Log\LoggerInterface;
+use RetailCosmos\TrxMallUploadSalesDataApi\Clients\TangentApiClient;
 use RetailCosmos\TrxMallUploadSalesDataApi\Services\StoreDataProcessor;
 
 class SendSalesCommand extends Command
@@ -142,8 +143,14 @@ class SendSalesCommand extends Command
 
     private function sendSalesData(array $sales): void
     {
-        $tangentApiClient = resolve('tangent-api-client'); // later TangentApiClient::class
+        $config = config('trx_mall_upload_sales_data_api.api');
 
-        $tangentApiClient->sendSales($sales);
+        $client = new TangentApiClient($config);
+
+        $response = $client->sendSalesHourly($sales);
+
+        if (! $response->ok()) {
+            throw new \Exception($response->json('errors.0.message'));
+        }
     }
 }
