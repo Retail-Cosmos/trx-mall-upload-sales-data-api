@@ -67,7 +67,7 @@ class SalesDataProcessor
         $validator = Validator::make($sales, [
             '*.happened_at' => ['required', 'date_format:Y-m-d H:i:s', function ($attribute, $value, $fail) {
                 if (Carbon::parse($value)->format('Y-m-d') !== $this->date) {
-                    $fail('this sale is not on the date given');
+                    $fail('One of the sales is not on the date given');
                 }
             }],
             '*.gst' => $this->amountRules,
