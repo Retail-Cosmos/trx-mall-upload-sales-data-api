@@ -115,11 +115,11 @@ class SalesDataProcessor
         $this->preparedSales->transform(function ($sale) use ($sales, $hour, $date) {
             if ($sale['sale']['hour'] === (int) $hour && $sale['sale']['date'] === $date) {
                 $sale['sale']['receiptcount'] += $sales->count();
-                $sale['sale']['gto'] = round($sale['sale']['gto'] + $sales->sum('net_amount'), 2);
-                $sale['sale']['gst'] = round($sale['sale']['gst'] + $sales->sum('gst'), 2);
-                $sale['sale']['discount'] = round($sale['sale']['discount'] + $sales->sum('discount'), 2);
+                $sale['sale']['gto'] = round($sales->sum('net_amount'), 2);
+                $sale['sale']['gst'] = round($sales->sum('gst'), 2);
+                $sale['sale']['discount'] = round($sales->sum('discount'), 2);
                 foreach ($this->paymentTypes as $paymentType) {
-                    $sale['sale'][$paymentType] = round($sale['sale'][$paymentType] + $sales->sum('payments.'.$paymentType), 2);
+                    $sale['sale'][$paymentType] = round($sales->sum('payments.'.$paymentType), 2);
                 }
             }
 
