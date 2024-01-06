@@ -6,7 +6,7 @@ use RetailCosmos\TrxMallUploadSalesDataApi\Services\SalesDataProcessor;
 it('transforms the sales data', function () {
     $sales = collect([
         [
-            'happened_at' => '2023-02-01 00:00:00',
+            'happened_at' => '2024-02-01 00:00:00',
             'net_amount' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
@@ -20,7 +20,7 @@ it('transforms the sales data', function () {
                 PaymentType::OTHERS() => 57.99,
             ],
         ], [
-            'happened_at' => '2023-02-01 00:00:00',
+            'happened_at' => '2024-02-01 00:00:00',
             'net_amount' => 391.54,
             'gst' => 12.65,
             'discount' => 10,
@@ -40,7 +40,7 @@ it('transforms the sales data', function () {
         'gstregistered' => 'Y',
     ];
 
-    $processor = new SalesDataProcessor('2023-02-01');
+    $processor = new SalesDataProcessor('2024-02-01');
     $result = $processor->process($sales, $storeData);
 
     expect(count($result))->toBe(24);
@@ -50,7 +50,7 @@ it('transforms the sales data', function () {
     expect($sale['sale'])->toBe([
         'machineid' => '123',
         'batchid' => 1,
-        'date' => '20230201',
+        'date' => '20240201',
         'hour' => 0,
         'receiptcount' => 2,
         'gto' => 583.08,
@@ -70,7 +70,7 @@ it('transforms the sales data', function () {
 it('throws exception when sales data is invalid', function () {
     $sales = collect([
         [
-            'happened_at' => '2023-01-01 00:00:00',
+            'happened_at' => '2024-01-01 00:00:00',
             'net_amount' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
@@ -84,7 +84,7 @@ it('throws exception when sales data is invalid', function () {
                 PaymentType::OTHERS() => 57.99,
             ],
         ], [
-            'happened_at' => '2023-01-01 00:00:00',
+            'happened_at' => '2024-01-01 00:00:00',
             'gst' => 12.65,
             'discount' => 10,
             'payments' => [
@@ -103,6 +103,6 @@ it('throws exception when sales data is invalid', function () {
         'gstregistered' => 'Y',
     ];
 
-    $processor = new SalesDataProcessor('2023-02-01');
+    $processor = new SalesDataProcessor('2024-02-01');
     $processor->process($sales, $storeData);
 })->throws(\Exception::class);
