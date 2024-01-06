@@ -33,10 +33,11 @@ class TrxMallUploadSalesDataApiServiceProvider extends PackageServiceProvider
     public function boot()
     {
         parent::boot();
+
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../stubs/TrxMallUploadSalesDataApiSalesService.php' => app_path('Services/TrxMallUploadSalesDataApiSalesService.php'),
-            ]);
+            ], 'trx-mall-upload-sales-data-api-service');
         }
     }
 
