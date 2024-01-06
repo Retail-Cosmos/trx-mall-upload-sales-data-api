@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 
 interface TrxSalesService
 {
-    public function getStoreData(?string $storeIdentifier = null): array;
+    public function getStores(?string $storeIdentifier = null): array;
 
-    public function getSalesData(string $date, string $storeIdentifier): Collection;
+    public function getSales(string $date, string $storeIdentifier): Collection;
 }
