@@ -2,7 +2,7 @@
 
 namespace RetailCosmos\TrxMallUploadSalesDataApi;
 
-use App\Services\TrxMallUploadSalesDataApiSalesService;
+use App\Services\TrxMallUploadSalesDataApiService;
 use RetailCosmos\TrxMallUploadSalesDataApi\Commands\SendSalesCommand;
 use RetailCosmos\TrxMallUploadSalesDataApi\Contracts\TrxSalesService;
 use Spatie\LaravelPackageTools\Package;
@@ -21,7 +21,7 @@ class TrxMallUploadSalesDataApiServiceProvider extends PackageServiceProvider
 
         $this->app->singleton(
             TrxSalesService::class,
-            TrxMallUploadSalesDataApiSalesService::class,
+            TrxMallUploadSalesDataApiService::class,
         );
     }
 
@@ -36,7 +36,7 @@ class TrxMallUploadSalesDataApiServiceProvider extends PackageServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../stubs/TrxMallUploadSalesDataApiSalesService.php' => app_path('Services/TrxMallUploadSalesDataApiSalesService.php'),
+                __DIR__.'/../stubs/TrxMallUploadSalesDataApiService.php' => app_path('Services/TrxMallUploadSalesDataApiService.php'),
             ], 'trx-mall-upload-sales-data-api-service');
         }
     }

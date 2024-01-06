@@ -5,7 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Collection;
 use RetailCosmos\TrxMallUploadSalesDataApi\Contracts\TrxSalesService;
 
-class TrxMallUploadSalesDataApiSalesService implements TrxSalesService
+class TrxMallUploadSalesDataApiService implements TrxSalesService
 {
     public function getStores(?string $storeIdentifier = null): array
     {
