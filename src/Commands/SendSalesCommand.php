@@ -2,11 +2,11 @@
 
 namespace RetailCosmos\TrxMallUploadSalesDataApi\Commands;
 
-use App\Services\TrxMallUploadSalesDataApiSalesService;
+use App\Services\TrxMallUploadSalesDataApiService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Psr\Log\LoggerInterface;
-use RetailCosmos\TrxMallUploadSalesDataApi\Enums\PaymentType;
+use RetailCosmos\TrxMallUploadSalesDataApi\Services\StoreDataProcessor;
 
 class SendSalesCommand extends Command
 {
@@ -52,23 +52,21 @@ class SendSalesCommand extends Command
 
             $this->info("sending sales data for date: $date");
 
-            $this->info("store identifier: $storeIdentifier");
+            if ($storeIdentifier) {
+                $this->info("for store identifier: $storeIdentifier");
+            }
 
-            $this->info('fetching store data');
+            $this->info('fetching and processing stores');
 
-            $storeData = $this->getStoreData($storeIdentifier);
+            $stores = $this->getProcessedStores($storeIdentifier);
 
-            $this->info('fetching sales data');
+            $this->info('fetching and processing sales');
 
-            $sales = $this->getSalesData($date, $storeIdentifier);
-
-            $this->info('processing sales data');
-
-            $processedSales = $this->processSalesData($sales, $storeData);
+            $sales = $this->getProcessedSales($date, $stores);
 
             $this->info('sending sales data');
 
-            $this->sendSalesData($processedSales);
+            $this->sendSalesData($sales);
 
             $this->info('sales data sent successfully');
 
@@ -94,50 +92,39 @@ class SendSalesCommand extends Command
         }
     }
 
-    private function getStoreData(string $storeIdentifier): array
+    private function getProcessedStores(?string $storeIdentifier): array
     {
-        $trxSalesService = resolve(TrxMallUploadSalesDataApiSalesService::class);
+        $trxSalesService = resolve(TrxMallUploadSalesDataApiService::class);
 
-        return $trxSalesService->getStoreData($storeIdentifier);
+        $stores = $trxSalesService->getStores($storeIdentifier);
+
+        if (empty($stores)) {
+            throw new \Exception('no stores found'.($storeIdentifier ? " for identifier: $storeIdentifier" : ''));
+        }
+
+        return StoreDataProcessor::process($stores);
     }
 
-    private function getSalesData(string $date, string $storeIdentifier): array
+    private function getProcessedSales(string $date, array $stores): array
     {
-        $trxSalesService = resolve(TrxMallUploadSalesDataApiSalesService::class);
+        $trxSalesService = resolve(TrxMallUploadSalesDataApiService::class);
 
-        return $trxSalesService->getSalesData($date, $storeIdentifier)->toArray();
-    }
-
-    private function processSalesData(array $sales, array $storeData): array
-    {
-        $processedSales = [
-            [
-                'sale' => [
-                    'machineid' => '123',
-                    'batchid' => 1,
-                    'date' => '20230201',
-                    'hour' => 0,
-                    'receiptcount' => 2,
-                    'gto' => 583.08,
-                    'gst' => 14.20,
-                    'discount' => 10.00,
-                    PaymentType::CASH() => 27.94,
-                    PaymentType::TNG() => 0.00,
-                    PaymentType::VISA() => 253.56,
-                    PaymentType::MASTERCARD() => 0.00,
-                    PaymentType::AMEX() => 95.60,
-                    PaymentType::VOUCHER() => 0.00,
-                    PaymentType::OTHERS() => 57.99,
-                    'gstregistered' => 'Y',
-                ],
-            ],
-        ];
+        $processedSales = [];
+        foreach ($stores as $store) {
+            $sales = $trxSalesService->getSales($date, $store['identifier']);
+            $salesService = resolve('sales-data-processor', [ // later SalesDataProcessor::class
+                'date' => $date,
+            ]);
+            $processedSales = array_merge($processedSales, $salesService->processSales($sales, $store));
+        }
 
         return $processedSales;
     }
 
     private function sendSalesData(array $sales): void
     {
+        $tangentApiClient = resolve('tangent-api-client'); // later TangentApiClient::class
 
+        $tangentApiClient->sendSales($sales);
     }
 }
