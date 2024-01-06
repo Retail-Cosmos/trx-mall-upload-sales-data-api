@@ -19,7 +19,7 @@ class TrxMallUploadSalesDataApiServiceProvider extends PackageServiceProvider
     {
         parent::register();
 
-        $this->app->singleton(
+        $this->app->bind(
             TrxSalesService::class,
             TrxMallUploadSalesDataApiService::class,
         );
