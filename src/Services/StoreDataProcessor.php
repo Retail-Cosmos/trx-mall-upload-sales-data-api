@@ -9,11 +9,11 @@ class StoreDataProcessor
      *
      * @throws \Exception
      */
-    public function process(array $storeData): array
+    public static function process(array $storeData): array
     {
-        $this->validate($storeData);
+        self::validate($storeData);
 
-        $this->prepare($storeData);
+        self::prepare($storeData);
 
         return $storeData;
     }
