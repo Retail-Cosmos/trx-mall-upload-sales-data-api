@@ -18,7 +18,7 @@ return [
      * for first date it will be 1 then 2 and so on
      * this date should be in Y-m-d format
      */
-    'date_of_first_sales' => env('TRX_MALL_DATE_OF_FIRST_SALES', '2023-01-01'),
+    'date_of_first_sales_upload' => env('TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD'),
 
     /**
      * The 'log' option specifies the channel to be used for logging,
