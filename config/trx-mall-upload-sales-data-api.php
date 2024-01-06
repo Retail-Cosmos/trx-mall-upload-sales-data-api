@@ -28,7 +28,7 @@ return [
 
     /**
      * recipient for the notification
-     * mail.name and mail.email are used for the recipient
+     * mail.name and mail.email are used for the recipient of the email notification
      */
     'notifications' => [
         'mail' => [
