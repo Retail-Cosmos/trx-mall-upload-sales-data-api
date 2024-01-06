@@ -23,7 +23,7 @@ return [
      * The 'log' option specifies the channel to be used for logging, with a default value of 'stack'.
      */
     'log' => [
-        'channel' => env('TRX_MALL_API_LOG_CHANNEL', 'stack'),
+        'channel' => env('TRX_MALL_LOG_CHANNEL', 'stack'),
     ],
 
     /**
