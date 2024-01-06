@@ -58,66 +58,6 @@ php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-service"
 
 3. update the `app/Services/TrxMallUploadSalesDataService.php` file to return the store data and sales data.
 
-    1. add getStores method to return the store data
-    
-    ```php
-    public function getStores(string $storeIdentifier = null): array
-    {
-        return [
-            [
-                'machine_id' => '123',
-                'store_identifier' => 'store1',
-                'gst_registered' => true,
-            ],
-            [
-                'machine_id' => '456',
-                'store_identifier' => 'store2',
-                'gst_registered' => false,
-            ],
-        ];
-    }
-    ```
-    2. add getSales method to return the sales data
-    
-    ```php
-    use RetailCosmos\TrxMallUploadSalesDataApi\Enums\PaymentType;
-    public function getSales(string $storeIdentifier = null, string $date = null): Collection
-    {
-        return collect([
-            [
-                'happened_at' => '2023-01-01 00:00:00',
-                'net_amount' => 191.54,
-                'gst' => 1.55,
-                'discount' => 0,
-                'payments' => [
-                    'cash' => 18.97,
-                    'tng' => 0,
-                    'visa' => 176.78,
-                    'mastercard' => 0,
-                    'amex' => 0,
-                    'voucher' => 0,
-                    'othersamount' => 0,
-                ],
-            ], [
-                'happened_at' => '2023-01-01 00:00:00',
-                'net_amount' => 391.54,
-                'gst' => 12.65,
-                'discount' => 10,
-                'payments' => [
-                    // you can use the PaymentType enum to get the payment type
-                    PaymentType::CASH() => 18.97,
-                    PaymentType::TNG() => 0,
-                    PaymentType::VISA() => 176.78,
-                    PaymentType::MASTERCARD() => 0,
-                    PaymentType::AMEX() => 47.80,
-                    PaymentType::VOUCHER() => 0,
-                    PaymentType::OTHERS() => 0,
-                ],
-            ],
-        ]);
-    }
-    ```
-
 ## Testing
 
 ```bash
