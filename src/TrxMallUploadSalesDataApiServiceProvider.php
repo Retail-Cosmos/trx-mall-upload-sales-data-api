@@ -10,7 +10,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class TrxMallUploadSalesDataApiServiceProvider extends PackageServiceProvider
 {
-        /**
+    /**
      * Register any application services.
      *
      * @return void

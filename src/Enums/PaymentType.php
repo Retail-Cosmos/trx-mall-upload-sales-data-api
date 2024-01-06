@@ -2,6 +2,15 @@
 
 namespace RetailCosmos\TrxMallUploadSalesDataApi\Enums;
 
+/**
+ * @method static string CASH()
+ * @method static string TNG()
+ * @method static string VISA()
+ * @method static string MASTERCARD()
+ * @method static string AMEX()
+ * @method static string VOUCHER()
+ * @method static string OTHERS()
+ */
 enum PaymentType: string
 {
     case CASH = 'cash';
