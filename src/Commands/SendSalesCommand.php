@@ -121,7 +121,7 @@ class SendSalesCommand extends Command
             throw new \Exception('no stores found'.($storeIdentifier ? " for identifier: $storeIdentifier" : ''));
         }
 
-        return StoreDataProcessor::process($stores);
+        return (new StoreDataProcessor())->process($stores);
     }
 
     private function getProcessedSales(string $date, array $stores): array
