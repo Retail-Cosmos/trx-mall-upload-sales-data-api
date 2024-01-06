@@ -56,7 +56,7 @@ $schedule->command('tangent:send-sales')->daily();
 php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-service"
 ```
 
-3. update the `app/Services/TrxMallUploadSalesDataService.php` file to return the store data and sales data.
+3. update the `app/Services/TrxMallUploadSalesDataService.php` file to return the stores and sales data.
 
 ## Testing
 
