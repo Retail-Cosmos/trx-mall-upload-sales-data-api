@@ -123,10 +123,10 @@ class SendSalesCommand extends Command
     {
         $validator = validator(config('trx_mall_upload_sales_data_api', []), [
             'log.channel' => 'required|string',
-            'tangent_api_client.base_uri' => 'required|url',
-            'tangent_api_client.grant_type' => 'required|string',
-            'tangent_api_client.username' => 'required|string',
-            'tangent_api_client.password' => 'required|string',
+            'api.base_uri' => 'required|url',
+            'api.grant_type' => 'required|string',
+            'api.username' => 'required|string',
+            'api.password' => 'required|string',
             'notifications.mail.name' => 'nullable|string',
             'notifications.mail.email' => 'nullable|email',
         ]);
@@ -163,7 +163,7 @@ class SendSalesCommand extends Command
 
         $processedSales = [];
         foreach ($stores as $store) {
-            $sales = $trxSalesService->getSales($date, $store['identifier']);
+            $sales = $trxSalesService->getSales($date, $store['store_identifier']);
             $salesService = new SalesDataProcessor($date, $batchId);
             $processedSales = array_merge($processedSales, $salesService->process($sales, $store));
         }
