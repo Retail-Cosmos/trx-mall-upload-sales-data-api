@@ -119,11 +119,14 @@ class SendSalesCommand extends Command
 
     private function validateOptions(): void
     {
-        validator([
-            'date' => $this->argument('date'),
-        ], [
+        $validator = validator($this->arguments(),
+        [
             'date' => 'nullable|date_format:Y-m-d',
-        ])->validate();
+        ]);
+
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first());
+        }
     }
 
     private function validateConfig(): void
