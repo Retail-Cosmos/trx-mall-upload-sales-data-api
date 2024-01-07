@@ -24,6 +24,7 @@ php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-config"
 please add the following to your `.env` file
 
 ```dotenv
+
 TRX_MALL_API_BASE_URI=
 TRX_MALL_API_GRANT_TYPE=
 TRX_MALL_API_USERNAME=
@@ -35,6 +36,9 @@ TRX_MALL_LOG_CHANNEL=
 # optional if you want to send status notification email
 TRX_MALL_NOTIFICATION_MAIL_NAME=
 TRX_MALL_NOTIFICATION_MAIL_EMAIL= #valid email address
+
+#mandatory In Y-m-d format (2024-01-01)
+TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD=
 
 ```
 
