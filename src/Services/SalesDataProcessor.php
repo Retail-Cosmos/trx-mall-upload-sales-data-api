@@ -18,6 +18,9 @@ class SalesDataProcessor
         'min:0',
     ];
 
+    /**
+     * @var array<int,string>
+     */
     private array $paymentTypes;
 
     /**
@@ -28,7 +31,7 @@ class SalesDataProcessor
     /**
      * pass date in Y-m-d format
      */
-    public function __construct(private string $date)
+    public function __construct(private string $date, private string $batchId)
     {
         $this->paymentTypes = PaymentType::values();
     }
@@ -92,7 +95,7 @@ class SalesDataProcessor
         for ($i = 0; $i < 24; $i++) {
             $this->preparedSales[] = ['sale' => [
                 'machineid' => $storeData['machineid'],
-                'batchid' => 1,
+                'batchid' => $this->batchId,
                 'date' => $date,
                 'hour' => $i,
                 'receiptcount' => 0,
