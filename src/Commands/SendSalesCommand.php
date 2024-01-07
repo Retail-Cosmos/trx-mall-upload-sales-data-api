@@ -20,7 +20,7 @@ class SendSalesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'tangent:send-sales {date?} {--store_identifier=}';
+    protected $signature = 'tangent:send-sales {--date=} {--store_identifier=}';
 
     /**
      * The console command description.
@@ -59,7 +59,7 @@ class SendSalesCommand extends Command
 
             $this->validateConfig();
 
-            $date = $this->argument('date') ?? now()->subDay()->format('Y-m-d');
+            $date = $this->option('date') ?? now()->subDay()->format('Y-m-d');
 
             $storeIdentifier = $this->option('store_identifier');
 
@@ -128,7 +128,7 @@ class SendSalesCommand extends Command
      */
     private function validateOptions(): void
     {
-        $validator = validator($this->arguments(), [
+        $validator = validator($this->options(), [
             'date' => 'nullable|date_format:Y-m-d',
         ]);
 
