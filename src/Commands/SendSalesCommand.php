@@ -42,7 +42,7 @@ class SendSalesCommand extends Command
         $this->trxLogChannel->info($message);
         $this->info($message);
 
-        try {
+        // try {
             validator([
                 'date' => $this->argument('date'),
             ], [
@@ -95,29 +95,29 @@ class SendSalesCommand extends Command
             }
 
             return 0;
-        } catch (\Exception $e) {
-            $message = 'error sending sales data to tangent api';
+        // } catch (\Exception $e) {
+        //     $message = 'error sending sales data to tangent api';
 
-            $this->trxLogChannel->error($message, [
-                'exception' => $e,
-            ]);
+        //     $this->trxLogChannel->error($message, [
+        //         'exception' => $e,
+        //     ]);
 
-            $this->error($message);
+        //     $this->error($message);
 
-            $this->error($e->getMessage());
+        //     $this->error($e->getMessage());
 
-            if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
-                Notification::route('mail', $email)
-                    ->notify(new TrxApiStatusNotification('error', $e->getMessage()));
-            }
+        //     if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
+        //         Notification::route('mail', $email)
+        //             ->notify(new TrxApiStatusNotification('error', $e->getMessage()));
+        //     }
 
-            return 1;
-        }
+        //     return 1;
+        // }
     }
 
     private function validateConfig(): void
     {
-        $validator = validator(config('trx_mall_upload_sales_data_api'), [
+        $validator = validator(config('trx_mall_upload_sales_data_api', []), [
             'log.channel' => 'required|string',
             'tangent_api_client.base_uri' => 'required|url',
             'tangent_api_client.grant_type' => 'required|string',
