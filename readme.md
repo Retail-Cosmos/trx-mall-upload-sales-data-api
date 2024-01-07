@@ -58,13 +58,13 @@ $schedule->command('tangent:send-sales')->daily();
 
 > [!NOTE]
 > If you wish to send a specific sales, you may pass the following options to the command:
->    - `date` - Date in the YYYY-MM-DD format to send sales for a specific date.
+>    - `--date` - Date in the YYYY-MM-DD format to send sales for a specific date.
 >    - `--store_identifier` - To send a sales for a specific store only.
 
 Example:
 
 ```bash
-php artisan tangent:send-sales date=2024-01-01 --store_identifier=store1
+php artisan tangent:send-sales --date=2024-01-01 --store_identifier=store1
 ```
 If you want to schedule it for a specific store
 
