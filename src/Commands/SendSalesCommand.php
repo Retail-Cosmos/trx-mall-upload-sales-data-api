@@ -5,8 +5,10 @@ namespace RetailCosmos\TrxMallUploadSalesDataApi\Commands;
 use App\Services\TrxMallUploadSalesDataApiService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Psr\Log\LoggerInterface;
 use RetailCosmos\TrxMallUploadSalesDataApi\Clients\TangentApiClient;
+use RetailCosmos\TrxMallUploadSalesDataApi\Notifications\TrxApiStatusNotification;
 use RetailCosmos\TrxMallUploadSalesDataApi\Services\StoreDataProcessor;
 
 class SendSalesCommand extends Command
@@ -81,6 +83,17 @@ class SendSalesCommand extends Command
 
             $this->info($message);
 
+            $message = 'total sales sent: '.count($sales);
+
+            $this->info($message);
+
+            $this->trxLogChannel->info($message);
+
+            if($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
+                Notification::route('mail', $email)
+                    ->notify(new TrxApiStatusNotification('success', $message));
+            }
+
             return 0;
         } catch (\Exception $e) {
             $message = 'error sending sales data to tangent api';
@@ -92,6 +105,11 @@ class SendSalesCommand extends Command
             $this->error($message);
 
             $this->error($e->getMessage());
+
+            if($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
+                Notification::route('mail', $email)
+                    ->notify(new TrxApiStatusNotification('error', $e->getMessage()));
+            }
 
             return 1;
         }
@@ -105,6 +123,8 @@ class SendSalesCommand extends Command
             'tangent_api_client.grant_type' => 'required|string',
             'tangent_api_client.username' => 'required|string',
             'tangent_api_client.password' => 'required|string',
+            'notifications.mail.name' => 'nullable|string',
+            'notifications.mail.email' => 'nullable|email',
         ]);
 
         if ($validator->fails()) {
@@ -147,10 +167,12 @@ class SendSalesCommand extends Command
 
         $client = new TangentApiClient($config);
 
-        $response = $client->sendSalesHourly($sales);
+        collect($sales)->chunk(900)->each(function ($sales) use ($client) {
+            $response = $client->sendSalesHourly($sales);
+            if (! $response->ok()) {
+                throw new \Exception($response->json('errors.0.message'));
+            }
+        });
 
-        if (! $response->ok()) {
-            throw new \Exception($response->json('errors.0.message'));
-        }
     }
 }
