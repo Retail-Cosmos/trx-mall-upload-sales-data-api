@@ -3,8 +3,8 @@
 namespace RetailCosmos\TrxMallUploadSalesDataApi\Commands;
 
 use Illuminate\Console\Command;
-use \Psr\Log\LoggerInterface;
 use Illuminate\Support\Facades\Log;
+use Psr\Log\LoggerInterface;
 
 class SendSalesCommand extends Command
 {

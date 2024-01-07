@@ -27,4 +27,15 @@ return [
     'log' => [
         'channel' => env('TRX_MALL_LOG_CHANNEL', 'stack'),
     ],
+
+    /**
+     * recipient for the notification
+     * mail.name and mail.email are used for the recipient of the email notification
+     */
+    'notifications' => [
+        'mail' => [
+            'name' => env('TRX_MALL_NOTIFICATION_MAIL_NAME'),
+            'email' => env('TRX_MALL_NOTIFICATION_MAIL_EMAIL'),
+        ],
+    ],
 ];

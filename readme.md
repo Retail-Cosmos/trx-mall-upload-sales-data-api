@@ -34,8 +34,8 @@ TRX_MALL_API_PASSWORD=
 TRX_MALL_LOG_CHANNEL=
 
 # optional if you want to send status email
-TRX_MALL_API_MAIL_NAME=
-TRX_MALL_API_MAIL_EMAIL= #valid email address
+TRX_MALL_NOTIFICATION_MAIL_NAME=
+TRX_MALL_NOTIFICATION_MAIL_EMAIL= #valid email address
 
 #mandatory In Y-m-d format (2024-01-01)
 TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD=
