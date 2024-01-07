@@ -31,7 +31,7 @@ class SalesDataProcessor
     /**
      * pass date in Y-m-d format
      */
-    public function __construct(private string $date)
+    public function __construct(private string $date, private string $batchId)
     {
         $this->paymentTypes = PaymentType::values();
     }
@@ -91,13 +91,11 @@ class SalesDataProcessor
      */
     private function createTwentyFourHoursSalesForStore(array $storeData): void
     {
-        $batchId = Carbon::parse($this->date)->diffInDays(Carbon::parse(config('trx_mall_upload_sales_data_api.date_of_first_sales_upload')));
-
         $date = Carbon::parse($this->date)->format('Ymd');
         for ($i = 0; $i < 24; $i++) {
             $this->preparedSales[] = ['sale' => [
                 'machineid' => $storeData['machineid'],
-                'batchid' => $batchId,
+                'batchid' => $this->batchId,
                 'date' => $date,
                 'hour' => $i,
                 'receiptcount' => 0,
