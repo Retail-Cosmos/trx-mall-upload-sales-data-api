@@ -145,6 +145,8 @@ class SendSalesCommand extends Command
 
     /**
      * @return array<int,mixed>
+     *
+     * @throws \Exception
      */
     private function getProcessedStores(?string $storeIdentifier): array
     {
@@ -162,6 +164,8 @@ class SendSalesCommand extends Command
     /**
      * @param  array<int,mixed>  $stores
      * @return array<int,mixed>
+     *
+     * @throws \Exception
      */
     private function getProcessedSales(string $date, array $stores): array
     {
@@ -187,6 +191,8 @@ class SendSalesCommand extends Command
 
     /**
      * @param  array<int,mixed>  $sales
+     *
+     * @throws \Exception
      */
     private function sendSalesData(array $sales): void
     {
