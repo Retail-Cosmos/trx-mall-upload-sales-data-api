@@ -31,7 +31,7 @@ class SalesDataProcessor
     /**
      * pass date in Y-m-d format
      */
-    public function __construct(private string $date, private string $batchId)
+    public function __construct(private string $date, private int $batchId)
     {
         $this->paymentTypes = PaymentType::values();
     }
