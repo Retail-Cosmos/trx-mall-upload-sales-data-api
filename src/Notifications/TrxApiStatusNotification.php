@@ -10,7 +10,7 @@ class TrxApiStatusNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(private string $name,private string $status, private string $messages)
+    public function __construct(private string $name, private string $status, private string $messages)
     {
     }
 
@@ -32,9 +32,9 @@ class TrxApiStatusNotification extends Notification
         return (new MailMessage)
             ->subject('TRX Mall Sales Data Upload Status Notification')
             ->markdown('trx-mall-upload-sales-data-api::mail.api-status', [
-                'name'=>$this->name,
+                'name' => $this->name,
                 'status' => $this->status,
-                'messages' => $this->messages
+                'messages' => $this->messages,
             ]);
     }
 }
