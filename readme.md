@@ -33,7 +33,7 @@ TRX_MALL_API_PASSWORD=
 # optional default is stack
 TRX_MALL_LOG_CHANNEL=
 
-# optional if you want to send status email
+# optional if you want to send status notification email
 TRX_MALL_NOTIFICATION_MAIL_NAME=
 TRX_MALL_NOTIFICATION_MAIL_EMAIL= #valid email address
 
@@ -49,9 +49,9 @@ Please follow these steps for the sending the sales data to API.
 
 1. Add a [scheduler](https://laravel.com/docs/10.x/scheduling) in your Laravel project to call the command `tangent:send-sales` daily at midnight. It send the sales for the previous day for each store as returned from the application.
 
-```php
-$schedule->command('tangent:send-sales')->daily();
-```
+    ```php
+    $schedule->command('tangent:send-sales')->daily();
+    ```
 
 > [!TIP]
 > If you wish to send a specific sales, you may pass the following options to the command:
@@ -60,11 +60,39 @@ $schedule->command('tangent:send-sales')->daily();
 
 2. publish the service by running the following command
 
-```bash
-php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-service"
-```
+    ```bash
+    php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-service"
+    ```
 
 3. update the `app/Services/TrxMallUploadSalesDataService.php` file to return the stores and sales data.
+    
+    1. store data should be an array of stores with the following keys
+        - `store_identifier` - unique identifier for the store. it will be used to retrieve the sales for the store.
+        - `machine_id'` - machine id.
+        - `gst_registered` - boolean value to indicate if the store is GST registered or not.
+    2. sales data should be an array of sales with the following keys
+        - `happened_at` - date and time of the sale in the format `Y-m-d H:i:s`
+        - `net_amount` - net amount.
+        - `gst` - gst amount.
+        - `discount` - discount amount.
+        - `payments` - array of payments with the following keys with the amount of the payment after discount and before gst
+            - `cash`, `tng`, `visa`, `mastercard`, `amex`, `voucher`, `othersamount` or you can use PaymentType enum provided by the package.
+            
+            ```php
+                PaymentType::CASH() // cash
+                PaymentType::TNG() // tng
+                PaymentType::VISA() // visa
+                PaymentType::MASTERCARD() // mastercard
+                PaymentType::AMEX() // amex
+                PaymentType::VOUCHER() // voucher
+                PaymentType::OTHERS() // othersamount
+            ```
+
+4. if you want to customize the notification email, you can publish the notification view by running the following command
+
+    ```bash
+    php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-view"
+    ```
 
 ## Testing
 
