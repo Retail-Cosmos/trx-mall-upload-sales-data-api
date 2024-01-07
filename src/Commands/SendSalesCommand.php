@@ -136,6 +136,7 @@ class SendSalesCommand extends Command
      */
     private function validateConfig(): void
     {
+        $requiredAttributeMessage= 'The :attribute needs to be configured';
         $validator = validator(config('trx_mall_upload_sales_data_api', []), [
             'log.channel' => 'required|string',
             'api.base_uri' => 'required|url',
@@ -144,6 +145,19 @@ class SendSalesCommand extends Command
             'api.password' => 'required|string',
             'notifications.mail.name' => 'nullable|string',
             'notifications.mail.email' => 'nullable|email',
+            'date_of_first_sales_upload' => 'required|date_format:Y-m-d,before_or_equal:now',
+        ],[
+            '*.required' => $requiredAttributeMessage,
+            '*.*.required' => $requiredAttributeMessage,
+        ],[
+            'log.channel' => 'TRX_MALL_LOG_CHANNEL',
+            'api.base_uri' => 'TRX_MALL_API_BASE_URI',
+            'api.grant_type' => 'TRX_MALL_API_GRANT_TYPE',
+            'api.username' => 'TRX_MALL_API_USERNAME',
+            'api.password' => 'TRX_MALL_API_PASSWORD',
+            'notifications.mail.name' => 'TRX_MALL_NOTIFICATION_MAIL_NAME',
+            'notifications.mail.email' => 'TRX_MALL_NOTIFICATION_MAIL_EMAIL',
+            'date_of_first_sales_upload' => 'TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD',
         ]);
 
         if ($validator->fails()) {
