@@ -67,9 +67,17 @@ class SendSalesCommand extends Command
 
             $stores = $this->getProcessedStores($storeIdentifier);
 
+            if (empty($stores)) {
+                throw new \Exception('no stores found');
+            }
+
             $this->info('fetching and processing sales');
 
             $sales = $this->getProcessedSales($date, $stores);
+
+            if (empty($sales)) {
+                throw new \Exception('no sales found');
+            }
 
             $this->info('sending sales data');
 
