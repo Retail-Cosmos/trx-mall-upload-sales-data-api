@@ -40,7 +40,7 @@ it('transforms the sales data', function () {
         'gstregistered' => 'Y',
     ];
 
-    $processor = new SalesDataProcessor('2024-02-01',1);
+    $processor = new SalesDataProcessor('2024-02-01', 1);
     $result = $processor->process($sales, $storeData);
 
     expect(count($result))->toBe(24);
@@ -74,58 +74,58 @@ it('throws exception when sales data is invalid', function ($sales) {
         'gstregistered' => 'Y',
     ];
 
-    $processor = new SalesDataProcessor('2024-02-01',1);
+    $processor = new SalesDataProcessor('2024-02-01', 1);
     $processor->process($sales, $storeData);
 })->with([
-        'invalid date' => [
+    'invalid date' => [
+        [
             [
-                [
-                    'happened_at' => '2024-02-02 00:00:00',
-                    'net_amount' => 191.54,
-                    'gst' => 1.55,
-                    'discount' => 0,
-                    'payments' => [
-                        PaymentType::CASH() => 8.97,
-                        PaymentType::TNG() => 0,
-                        PaymentType::VISA() => 76.78,
-                        PaymentType::MASTERCARD() => 0,
-                        PaymentType::AMEX() => 47.80,
-                        PaymentType::VOUCHER() => 0,
-                        PaymentType::OTHERS() => 57.99,
-                    ],
+                'happened_at' => '2024-02-02 00:00:00',
+                'net_amount' => 191.54,
+                'gst' => 1.55,
+                'discount' => 0,
+                'payments' => [
+                    PaymentType::CASH() => 8.97,
+                    PaymentType::TNG() => 0,
+                    PaymentType::VISA() => 76.78,
+                    PaymentType::MASTERCARD() => 0,
+                    PaymentType::AMEX() => 47.80,
+                    PaymentType::VOUCHER() => 0,
+                    PaymentType::OTHERS() => 57.99,
                 ],
             ],
         ],
-        'one of key is missing' => [
+    ],
+    'one of key is missing' => [
+        [
             [
-                [
-                    'happened_at' => '2024-02-01 00:00:00',
-                    'net_amount' => 191.54,
-                    'gst' => 1.55,
-                    'discount' => 0,
-                    'payments' => [
-                        PaymentType::CASH() => 8.97,
-                        PaymentType::TNG() => 0,
-                        PaymentType::VISA() => 76.78,
-                        PaymentType::MASTERCARD() => 0,
-                        PaymentType::AMEX() => 47.80,
-                        PaymentType::VOUCHER() => 0,
-                        PaymentType::OTHERS() => 57.99,
-                    ],
-                ], [
-                    'happened_at' => '2024-02-01 00:00:00',
-                    'net_amount' => 391.54,
-                    'gst' => 12.65,
-                    'payments' => [
-                        PaymentType::CASH() => 18.97,
-                        PaymentType::TNG() => 0,
-                        PaymentType::VISA() => 176.78,
-                        PaymentType::MASTERCARD() => 0,
-                        PaymentType::AMEX() => 47.80,
-                        PaymentType::VOUCHER() => 0,
-                        PaymentType::OTHERS() => 0,
-                    ],
+                'happened_at' => '2024-02-01 00:00:00',
+                'net_amount' => 191.54,
+                'gst' => 1.55,
+                'discount' => 0,
+                'payments' => [
+                    PaymentType::CASH() => 8.97,
+                    PaymentType::TNG() => 0,
+                    PaymentType::VISA() => 76.78,
+                    PaymentType::MASTERCARD() => 0,
+                    PaymentType::AMEX() => 47.80,
+                    PaymentType::VOUCHER() => 0,
+                    PaymentType::OTHERS() => 57.99,
+                ],
+            ], [
+                'happened_at' => '2024-02-01 00:00:00',
+                'net_amount' => 391.54,
+                'gst' => 12.65,
+                'payments' => [
+                    PaymentType::CASH() => 18.97,
+                    PaymentType::TNG() => 0,
+                    PaymentType::VISA() => 176.78,
+                    PaymentType::MASTERCARD() => 0,
+                    PaymentType::AMEX() => 47.80,
+                    PaymentType::VOUCHER() => 0,
+                    PaymentType::OTHERS() => 0,
                 ],
             ],
         ],
-    ])->throws(\Exception::class);
+    ],
+])->throws(\Exception::class);
