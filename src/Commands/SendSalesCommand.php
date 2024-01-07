@@ -3,12 +3,14 @@
 namespace RetailCosmos\TrxMallUploadSalesDataApi\Commands;
 
 use App\Services\TrxMallUploadSalesDataApiService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Psr\Log\LoggerInterface;
 use RetailCosmos\TrxMallUploadSalesDataApi\Clients\TangentApiClient;
 use RetailCosmos\TrxMallUploadSalesDataApi\Notifications\TrxApiStatusNotification;
+use RetailCosmos\TrxMallUploadSalesDataApi\Services\SalesDataProcessor;
 use RetailCosmos\TrxMallUploadSalesDataApi\Services\StoreDataProcessor;
 
 class SendSalesCommand extends Command
@@ -42,7 +44,7 @@ class SendSalesCommand extends Command
         $this->trxLogChannel->info($message);
         $this->info($message);
 
-        // try {
+        try {
             validator([
                 'date' => $this->argument('date'),
             ], [
@@ -90,29 +92,31 @@ class SendSalesCommand extends Command
             $this->trxLogChannel->info($message);
 
             if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
+                $name = config('trx_mall_upload_sales_data_api.notifications.mail.name', 'sir/madam');
                 Notification::route('mail', $email)
-                    ->notify(new TrxApiStatusNotification('success', $message));
+                    ->notify(new TrxApiStatusNotification($name,'success', $message));
             }
 
             return 0;
-        // } catch (\Exception $e) {
-        //     $message = 'error sending sales data to tangent api';
+        } catch (\Exception $e) {
+            $message = 'error sending sales data to tangent api';
 
-        //     $this->trxLogChannel->error($message, [
-        //         'exception' => $e,
-        //     ]);
+            $this->trxLogChannel->error($message, [
+                'exception' => $e,
+            ]);
 
-        //     $this->error($message);
+            $this->error($message);
 
-        //     $this->error($e->getMessage());
+            $this->error($e->getMessage());
 
-        //     if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
-        //         Notification::route('mail', $email)
-        //             ->notify(new TrxApiStatusNotification('error', $e->getMessage()));
-        //     }
+            if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
+                $name = config('trx_mall_upload_sales_data_api.notifications.mail.name', 'sir/madam');
+                Notification::route('mail', $email)
+                    ->notify(new TrxApiStatusNotification($name,'error', $e->getMessage()));
+            }
 
-        //     return 1;
-        // }
+            return 1;
+        }
     }
 
     private function validateConfig(): void
@@ -155,14 +159,13 @@ class SendSalesCommand extends Command
     private function getProcessedSales(string $date, array $stores): array
     {
         $trxSalesService = resolve(TrxMallUploadSalesDataApiService::class);
+        $batchId = Carbon::parse($date)->diffInDays(config('trx_mall_upload_sales_data_api.date_of_first_sales_upload')) + 1;
 
         $processedSales = [];
         foreach ($stores as $store) {
             $sales = $trxSalesService->getSales($date, $store['identifier']);
-            $salesService = resolve('sales-data-processor', [ // later SalesDataProcessor::class
-                'date' => $date,
-            ]);
-            $processedSales = array_merge($processedSales, $salesService->processSales($sales, $store));
+            $salesService = new SalesDataProcessor($date, $batchId);
+            $processedSales = array_merge($processedSales, $salesService->process($sales, $store));
         }
 
         return $processedSales;
