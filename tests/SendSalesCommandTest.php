@@ -46,6 +46,33 @@ it('fails when config is invalid', function () {
     $this->artisan('tangent:send-sales')->assertExitCode(1);
 });
 
+it('fails when no stores found', function () {
+    $this->serviceMock->shouldReceive('getStores')->once()
+        ->andReturn([]);
+
+    $this->artisan('tangent:send-sales', [
+        'date' => '2024-01-01',
+    ])->assertExitCode(1);
+});
+
+it('fails when no sales found', function () {
+    $this->serviceMock->shouldReceive('getStores')->once()
+        ->andReturn([
+            [
+                'machine_id' => 123,
+                'store_identifier' => 'store1',
+                'gst_registered' => true,
+            ],
+        ]);
+
+    $this->serviceMock->shouldReceive('getSales')->once()
+        ->andReturn(collect([]));
+
+    $this->artisan('tangent:send-sales', [
+        'date' => '2024-01-01',
+    ])->assertExitCode(1);
+});
+
 it('sends sales data to tangent api', function () {
 
     $this->serviceMock->shouldReceive('getStores')->once()
@@ -94,3 +121,4 @@ it('sends sales data to tangent api', function () {
         'date' => '2024-01-01',
     ])->assertExitCode(0);
 });
+
