@@ -29,8 +29,11 @@ class SendSalesCommand extends Command
      */
     protected $description = 'Send sales in hourly(00-23) format to Tangent API';
 
-    protected LoggerInterface $trxLogChannel;
+    private LoggerInterface $trxLogChannel;
 
+    /**
+     * Create a new command instance.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -38,7 +41,10 @@ class SendSalesCommand extends Command
         $this->trxLogChannel = Log::channel(config('trx_mall_upload_sales_data_api.log.channel'));
     }
 
-    public function handle()
+    /**
+     * Execute the console command.
+     */
+    public function handle(): int
     {
         $message = 'start sending sales data to tangent api';
         $this->trxLogChannel->info($message);
@@ -136,7 +142,7 @@ class SendSalesCommand extends Command
      */
     private function validateConfig(): void
     {
-        $requiredAttributeMessage= 'The :attribute needs to be configured';
+        $requiredAttributeMessage = 'The :attribute needs to be configured';
         $validator = validator(config('trx_mall_upload_sales_data_api', []), [
             'log.channel' => 'required|string',
             'api.base_uri' => 'required|url',
@@ -146,10 +152,10 @@ class SendSalesCommand extends Command
             'notifications.mail.name' => 'nullable|string',
             'notifications.mail.email' => 'nullable|email',
             'date_of_first_sales_upload' => 'required|date_format:Y-m-d,before_or_equal:now',
-        ],[
+        ], [
             '*.required' => $requiredAttributeMessage,
             '*.*.required' => $requiredAttributeMessage,
-        ],[
+        ], [
             'log.channel' => 'TRX_MALL_LOG_CHANNEL',
             'api.base_uri' => 'TRX_MALL_API_BASE_URI',
             'api.grant_type' => 'TRX_MALL_API_GRANT_TYPE',
