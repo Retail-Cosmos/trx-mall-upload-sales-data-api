@@ -89,7 +89,7 @@ class TangentApiClient
                 $this->getExpiryPriorToToken($response->json('expires_in'), minutes: 5)
             );
 
-            return $token;
+            return (string) $token;
         } else {
             throw new \Exception($response->json('error_description'));
         }
