@@ -132,6 +132,9 @@ class SendSalesCommand extends Command
         }
     }
 
+    /**
+     * @return array<int,mixed>
+     */
     private function getProcessedStores(?string $storeIdentifier): array
     {
         $trxSalesService = resolve(TrxMallUploadSalesDataApiService::class);
@@ -145,6 +148,10 @@ class SendSalesCommand extends Command
         return (new StoreDataProcessor())->process($stores);
     }
 
+    /**
+     * @param  array<int,mixed>  $stores
+     * @return array<int,mixed>
+     */
     private function getProcessedSales(string $date, array $stores): array
     {
         $trxSalesService = resolve(TrxMallUploadSalesDataApiService::class);
@@ -161,6 +168,9 @@ class SendSalesCommand extends Command
         return $processedSales;
     }
 
+    /**
+     * @param  array<int,mixed>  $sales
+     */
     private function sendSalesData(array $sales): void
     {
         $config = config('trx_mall_upload_sales_data_api.api');
