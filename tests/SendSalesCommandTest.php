@@ -104,7 +104,7 @@ describe('failure cases with notification', function () {
         Notification::assertSentOnDemand(
             TrxApiStatusNotification::class,
             function ($notification, $channels, $notifiable) {
-                return  $notifiable->routes['mail'] == $this->mailConfig['email']
+                return $notifiable->routes['mail'] == $this->mailConfig['email']
                 && $notification->status === 'error'
                 && $notification->name === $this->mailConfig['name'];
             }
