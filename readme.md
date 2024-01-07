@@ -21,7 +21,7 @@ You can publish the config file with:
 php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-config"
 ```
 
-please add the following to your `.env` file
+Please add the following to your `.env` file
 
 ```dotenv
 # mandatory for the API
@@ -61,48 +61,50 @@ Please follow these steps for the sending the sales data to API.
     >    - `date` - Date in the YYYY-MM-DD format to send a sales for a specific date.
     >    - `--store_identifier` - To send a sales for a specific store only.
 
-    example:
+    Example:
 
-        ```bash
-        php artisan tangent:send-sales date=2024-01-01 --store_identifier=store1
-        ```
-    if you want to schedule it for a specific store
+    ```bash
+    php artisan tangent:send-sales date=2024-01-01 --store_identifier=store1
+    ```
+    If you want to schedule it for a specific store
 
-        ```php
-        $schedule->command('tangent:send-sales --store_identifier=store1')->daily();
-        ```
+    ```php
+    $schedule->command('tangent:send-sales --store_identifier=store1')->daily();
+    ```
 
-2. publish the service by running the following command
+2. Publish the service by running the following command:
 
     ```bash
     php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-service"
     ```
 
-3. update the `app/Services/TrxMallUploadSalesDataService.php` file to return the stores and sales data.
+3. Update the `app/Services/TrxMallUploadSalesDataService.php` file to return the stores and sales data:
     
-    1. store data should be an array of stores with the following keys
-        - `store_identifier` - unique identifier for the store. it will be used to retrieve the sales for the store.
-        - `machine_id'` - machine id.
-        - `gst_registered` - boolean value to indicate if the store is GST registered or not.
-    2. sales data should be an array of sales with the following keys
-        - `happened_at` - date and time of the sale in the format `Y-m-d H:i:s`
-        - `net_amount` - net amount.
-        - `gst` - gst amount.
-        - `discount` - discount amount.
-        - `payments` - array of payments with the following keys with the amount of the payment after discount and before gst
-            - `cash`, `tng`, `visa`, `mastercard`, `amex`, `voucher`, `othersamount` or you can use PaymentType enum provided by the package.
+    1. Store data should be an array of stores with the following keys:
+        - `store_identifier`: Unique identifier for the store. It will be used to retrieve the sales for the store.
+        - `machine_id`: Machine ID.
+        - `gst_registered`: Boolean value to indicate if the store is GST registered or not.
+    2. Sales data should be an array of sales with the following keys:
+        - `happened_at`: Date and time of the sale in the format `Y-m-d H:i:s`.
+        - `net_amount`: Net amount.
+        - `gst`: GST amount.
+        - `discount`: Discount amount.
+        - `payments`: Array of payments with the following keys with the amount of the payment after discount and before GST:
+            - `cash`, `tng`, `visa`, `mastercard`, `amex`, `voucher`, `othersamount` or you can use `PaymentType` enum provided by the package.
             
             ```php
-                PaymentType::CASH() // cash
-                PaymentType::TNG() // tng
-                PaymentType::VISA() // visa
-                PaymentType::MASTERCARD() // mastercard
-                PaymentType::AMEX() // amex
-                PaymentType::VOUCHER() // voucher
-                PaymentType::OTHERS() // othersamount
+            use RetailCrm\TrxMallUploadSalesDataApi\Enums\PaymentType;
+
+            PaymentType::CASH(); // cash
+            PaymentType::TNG(); // tng
+            PaymentType::VISA(); // visa
+            PaymentType::MASTERCARD(); // mastercard
+            PaymentType::AMEX(); // amex
+            PaymentType::VOUCHER(); // voucher
+            PaymentType::OTHERS(); // othersamount
             ```
 
-4. if you want to customize the notification email, you can publish the notification view by running the following command
+4. If you want to customize the notification email, you can publish the notification view by running the following command:
 
     ```bash
     php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-view"
