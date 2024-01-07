@@ -1,5 +1,9 @@
 <x-mail::message>
-# {{ $status === 'success' ? '✅ Sales sent Successfully' : '❌ Sales failed to send' }}
+# Dear {{ $name }},
+
+<x-mail::panel>
+{{ $status === 'success' ? '✅ Sales sent Successfully' : '❌ Sales failed to send' }}
+</x-mail::panel>
 
 {{ $messages }}
 
