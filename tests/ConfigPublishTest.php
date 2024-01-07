@@ -20,6 +20,7 @@ it('has all required configuration available', function () {
     // check if all required keys are present
     expect(array_keys($config))->toEqual([
         'api',
+        'date_of_first_sales_upload',
         'log',
         'notifications',
     ]);
@@ -31,7 +32,6 @@ it('has all required configuration available', function () {
         'username',
         'password',
     ]);
-
     expect(array_keys($config['log']))->toEqual([
         'channel',
     ]);
