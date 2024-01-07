@@ -45,11 +45,9 @@ class SendSalesCommand extends Command
         $this->info($message);
 
         try {
-            validator([
-                'date' => $this->argument('date'),
-            ], [
-                'date' => 'nullable|date_format:Y-m-d',
-            ])->validate();
+            $this->info('validating options');
+
+            $this->validateOptions();
 
             $this->info('validating config');
 
@@ -117,6 +115,15 @@ class SendSalesCommand extends Command
 
             return 1;
         }
+    }
+
+    private function validateOptions(): void
+    {
+        validator([
+            'date' => $this->argument('date'),
+        ], [
+            'date' => 'nullable|date_format:Y-m-d',
+        ])->validate();
     }
 
     private function validateConfig(): void
