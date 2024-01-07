@@ -67,17 +67,9 @@ class SendSalesCommand extends Command
 
             $stores = $this->getProcessedStores($storeIdentifier);
 
-            if (empty($stores)) {
-                throw new \Exception('no stores found');
-            }
-
             $this->info('fetching and processing sales');
 
             $sales = $this->getProcessedSales($date, $stores);
-
-            if (empty($sales)) {
-                throw new \Exception('no sales found');
-            }
 
             $this->info('sending sales data');
 
@@ -179,8 +171,15 @@ class SendSalesCommand extends Command
         $processedSales = [];
         foreach ($stores as $store) {
             $sales = $trxSalesService->getSales($date, $store['store_identifier']);
+            if ($sales->isEmpty()) {
+                continue;
+            }
             $salesService = new SalesDataProcessor($date, $batchId);
             $processedSales = array_merge($processedSales, $salesService->process($sales, $store));
+        }
+
+        if (empty($processedSales)) {
+            throw new \Exception('no sales found');
         }
 
         return $processedSales;
@@ -201,6 +200,5 @@ class SendSalesCommand extends Command
                 throw new \Exception($response->json('errors.0.message'));
             }
         });
-
     }
 }
