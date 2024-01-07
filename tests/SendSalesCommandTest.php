@@ -236,6 +236,6 @@ dataset('valid_data', [[
                 PaymentType::VOUCHER() => 0,
                 PaymentType::OTHERS() => 0,
             ],
-        ]
+        ],
     ],
 ]]);

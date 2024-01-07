@@ -117,10 +117,12 @@ class SendSalesCommand extends Command
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     private function validateOptions(): void
     {
-        $validator = validator($this->arguments(),
-        [
+        $validator = validator($this->arguments(), [
             'date' => 'nullable|date_format:Y-m-d',
         ]);
 
@@ -129,6 +131,9 @@ class SendSalesCommand extends Command
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     private function validateConfig(): void
     {
         $validator = validator(config('trx_mall_upload_sales_data_api', []), [
