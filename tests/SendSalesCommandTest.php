@@ -21,7 +21,6 @@ beforeEach(function () {
             'password' => 'password',
         ],
         'trx_mall_upload_sales_data_api.date_of_first_sales_upload' => '2024-01-01',
-        'trx_mall_upload_sales_data_api.log.channel' => 'stack',
     ]);
 
     Notification::fake();
