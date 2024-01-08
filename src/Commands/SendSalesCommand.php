@@ -79,7 +79,7 @@ class SendSalesCommand extends Command
 
             $this->info('sending sales data');
 
-            $this->sendSalesData($sales);
+            $this->sendSales($sales);
 
             $this->info('sales data sent successfully');
 
@@ -210,10 +210,6 @@ class SendSalesCommand extends Command
             $processedSales = array_merge($processedSales, $salesService->process($sales, $store));
         }
 
-        if (empty($processedSales)) {
-            throw new \Exception('no sales found');
-        }
-
         return $processedSales;
     }
 
@@ -222,8 +218,12 @@ class SendSalesCommand extends Command
      *
      * @throws \Exception
      */
-    private function sendSalesData(array $sales): void
+    private function sendSales(array $sales): void
     {
+        if (empty($sales)) {
+            return;
+        }
+
         $config = config('trx_mall_upload_sales_data_api.api');
 
         $client = new TangentApiClient($config);
