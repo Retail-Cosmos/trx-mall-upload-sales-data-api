@@ -37,7 +37,7 @@ describe('failure cases without notification', function () {
 
     it('fails when date is invalid', function () {
         $this->artisan('tangent:send-sales', [
-            'date' => 'invalid-date',
+            '--date' => 'invalid-date',
         ])->assertExitCode(1);
     });
 
@@ -54,7 +54,7 @@ describe('failure cases without notification', function () {
             ->andReturn([]);
 
         $this->artisan('tangent:send-sales', [
-            'date' => '2024-02-01',
+            '--date' => '2024-02-01',
         ])->assertExitCode(1);
     });
 
@@ -70,7 +70,7 @@ describe('failure cases without notification', function () {
             ->andReturn(collect([]));
 
         $this->artisan('tangent:send-sales', [
-            'date' => '2024-02-01',
+            '--date' => '2024-02-01',
         ])->assertExitCode(1);
     });
 
@@ -96,7 +96,7 @@ describe('failure cases with notification', function () {
             ->andReturn([]);
 
         $this->artisan('tangent:send-sales', [
-            'date' => '2024-02-01',
+            '--date' => '2024-02-01',
         ])->assertExitCode(1);
     });
 
@@ -122,7 +122,7 @@ describe('success cases without notification', function () {
             ->andReturn(collect($sales));
 
         $this->artisan('tangent:send-sales', [
-            'date' => '2024-02-01',
+            '--date' => '2024-02-01',
         ])->assertExitCode(0);
 
     })->with('valid_data');
@@ -150,7 +150,7 @@ describe('success cases with notification', function () {
             ->andReturn(collect($sales));
 
         $this->artisan('tangent:send-sales', [
-            'date' => '2024-02-01',
+            '--date' => '2024-02-01',
         ])->assertExitCode(0);
     })->with('valid_data');
 
