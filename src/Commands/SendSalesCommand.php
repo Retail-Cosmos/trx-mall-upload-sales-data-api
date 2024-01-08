@@ -96,7 +96,7 @@ class SendSalesCommand extends Command
             $this->trxLogChannel->info($message);
 
             if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
-                $name = config('trx_mall_upload_sales_data_api.notifications.mail.name', 'sir/madam');
+                $name = config('trx_mall_upload_sales_data_api.notifications.mail.name');
                 Notification::route('mail', $email)
                     ->notify(new TrxApiStatusNotification($name, 'success', $message));
             }
@@ -114,7 +114,7 @@ class SendSalesCommand extends Command
             $this->error($e->getMessage());
 
             if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
-                $name = config('trx_mall_upload_sales_data_api.notifications.mail.name', 'sir/madam');
+                $name = config('trx_mall_upload_sales_data_api.notifications.mail.name');
                 Notification::route('mail', $email)
                     ->notify(new TrxApiStatusNotification($name, 'error', $e->getMessage()));
             }
