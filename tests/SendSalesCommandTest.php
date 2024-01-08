@@ -58,7 +58,7 @@ describe('failure cases without notification', function () {
         ])->assertExitCode(1);
     });
 
-    it('fails when no sales found', function () {
+    it('sends nothing when no sales found', function () {
         $this->serviceMock->shouldReceive('getStores')->once()
             ->andReturn([[
                 'machine_id' => 123,
@@ -71,7 +71,7 @@ describe('failure cases without notification', function () {
 
         $this->artisan('tangent:send-sales', [
             '--date' => '2024-02-01',
-        ])->assertExitCode(1);
+        ])->assertExitCode(0);
     });
 
     afterEach(function () {
