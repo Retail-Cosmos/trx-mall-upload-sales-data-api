@@ -207,7 +207,7 @@ class SendSalesCommand extends Command
                 continue;
             }
             $salesService = new SalesDataProcessor($date, $batchId);
-            $processedSales = array_merge($processedSales, $salesService->process($sales, $store));
+            $processedSales[] = $salesService->process($sales, $store);
         }
 
         return $processedSales;
@@ -228,8 +228,8 @@ class SendSalesCommand extends Command
 
         $client = new TangentApiClient($config);
 
-        collect($sales)->chunk(900)->each(function ($sales) use ($client) {
-            $response = $client->sendSalesHourly($sales->toArray());
+        collect($sales)->each(function ($sales) use ($client) {
+            $response = $client->sendSalesHourly($sales);
             if (! $response->ok()) {
                 throw new \Exception($response->json('errors.0.message'));
             }
