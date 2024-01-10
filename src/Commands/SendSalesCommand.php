@@ -238,7 +238,7 @@ class SendSalesCommand extends Command
             }
         }
 
-        if ($messages) {
+        if ($messages !== '') {
             throw new \Exception($messages);
         }
     }
