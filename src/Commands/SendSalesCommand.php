@@ -207,7 +207,7 @@ class SendSalesCommand extends Command
                 continue;
             }
             $salesService = new SalesDataProcessor($date, $batchId);
-            $processedSales[] = $salesService->process($sales, $store);
+            $processedSales[$store['store_identifier']] = $salesService->process($sales, $store);
         }
 
         return $processedSales;
@@ -218,9 +218,9 @@ class SendSalesCommand extends Command
      *
      * @throws \Exception
      */
-    private function sendSales(array $sales): void
+    private function sendSales(array $groupedSales): void
     {
-        if (empty($sales)) {
+        if (empty($groupedSales)) {
             return;
         }
 
@@ -228,11 +228,14 @@ class SendSalesCommand extends Command
 
         $client = new TangentApiClient($config);
 
-        collect($sales)->each(function ($sales) use ($client) {
+        foreach ($groupedSales as $storeIdentifier => $sales) {
             $response = $client->sendSalesHourly($sales);
             if (! $response->ok()) {
-                throw new \Exception($response->json('errors.0.message'));
+                throw new \Exception(
+                    'got error while sending sales for store'.$storeIdentifier.
+                    'error '.$response->json('errors.0.message')
+                );
             }
-        });
+        }
     }
 }
