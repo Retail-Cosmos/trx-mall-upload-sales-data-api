@@ -214,7 +214,7 @@ class SendSalesCommand extends Command
     }
 
     /**
-     * @param  array<int,mixed>  $sales
+     * @param  array<int,mixed>  $groupedSales
      *
      * @throws \Exception
      */
