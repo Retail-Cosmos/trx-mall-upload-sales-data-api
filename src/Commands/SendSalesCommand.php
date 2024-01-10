@@ -228,14 +228,18 @@ class SendSalesCommand extends Command
 
         $client = new TangentApiClient($config);
 
+        $messages = '';
+
         foreach ($groupedSales as $storeIdentifier => $sales) {
             $response = $client->sendSalesHourly($sales);
             if (! $response->ok()) {
-                throw new \Exception(
-                    'got error while sending sales for store'.$storeIdentifier.
-                    'error '.$response->json('errors.0.message')
-                );
+                $messages .= 'got error while sending sales for store'.$storeIdentifier.
+                'error '.$response->json('errors.0.message').PHP_EOL;
             }
+        }
+
+        if ($messages) {
+            throw new \Exception($messages);
         }
     }
 }
