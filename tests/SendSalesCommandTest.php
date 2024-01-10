@@ -128,7 +128,7 @@ describe('success cases without notification', function () {
 
     afterEach(function () {
         Notification::assertNothingSent();
-        Http::assertSentCount(3); // 1 for fetching token, 2 for sending sales
+        Http::assertSentCount(3); // 1 for fetching token, 2 for sending sales for 2 stores
     });
 });
 
@@ -162,7 +162,7 @@ describe('success cases with notification', function () {
                 && $notification->name === $this->mailConfig['name'];
             }
         );
-        Http::assertSentCount(3); // 1 for fetching token, 2 for sending sales
+        Http::assertSentCount(3); // 1 for fetching token, 2 for sending sales for 2 stores
     });
 });
 
