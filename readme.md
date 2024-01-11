@@ -56,6 +56,7 @@ $schedule->command('tangent:send-sales')->daily();
 ```
 
 > [!NOTE]
+> this command will send the sales for the previous day for each store as returned from the application.
 > If you wish to send a specific sales, you may pass the following options to the command:
 >    - `--date` - Date in the Y-m-d (2024-01-01) format to send sales for a specific date.
 >    - `--store_identifier` - To send a sales for a specific store only. check the `app/Services/TrxMallUploadSalesDataService.php` file for the store identifier.
