@@ -49,7 +49,7 @@ TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD=
 
 Please follow these steps for sending the sales data to API.
 
-1. Add a [scheduler](https://laravel.com/docs/10.x/scheduling) in your Laravel project to call the command `tangent:send-sales` daily at midnight. It sends the sales for the previous day for each store as returned from the application.
+1. Add a [scheduler](https://laravel.com/docs/10.x/scheduling) in your [Laravel](https://laravel.com) project to call the command `tangent:send-sales` daily at midnight. It sends the sales for the previous day for each store as returned from the application.
 
 ```php
 $schedule->command('tangent:send-sales')->daily();
