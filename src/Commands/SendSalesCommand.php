@@ -151,7 +151,7 @@ class SendSalesCommand extends Command
             'api.password' => 'required|string',
             'notifications.mail.name' => 'nullable|string',
             'notifications.mail.email' => 'nullable|email',
-            'date_of_first_sales_upload' => 'required|date_format:Y-m-d,before_or_equal:now',
+            'date_of_first_sales_upload' => 'required|date_format:Y-m-d,before_or_equal:today',
         ], [
             '*.required' => $requiredConfigMessage,
             '*.*.required' => $requiredConfigMessage,
