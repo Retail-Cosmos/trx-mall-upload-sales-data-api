@@ -111,10 +111,10 @@ class SalesDataProcessor
     /**
      * @param  Collection<int,mixed>  $sales
      */
-    private function aggregateSalesForHour(Collection $sales, string $hour): void
+    private function aggregateSalesForHour(Collection $sales, int $hour): void
     {
         foreach ($this->preparedSales as &$sale) {
-            if ($sale['sale']['hour'] === (int) $hour) {
+            if ($sale['sale']['hour'] === $hour) {
                 $sale['sale']['receiptcount'] = $sales->count();
                 $sale['sale']['gto'] = round($sales->sum('net_amount'), 2);
                 $sale['sale']['gst'] = round($sales->sum('gst'), 2);

@@ -34,7 +34,7 @@ return [
      */
     'notifications' => [
         'mail' => [
-            'name' => env('TRX_MALL_NOTIFICATION_MAIL_NAME'),
+            'name' => env('TRX_MALL_NOTIFICATION_MAIL_NAME', 'sir/madam'),
             'email' => env('TRX_MALL_NOTIFICATION_MAIL_EMAIL'),
         ],
     ],

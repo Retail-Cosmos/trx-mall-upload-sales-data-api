@@ -23,6 +23,10 @@ class TrxMallUploadSalesDataApiServiceProvider extends PackageServiceProvider
             TrxSalesService::class,
             TrxMallUploadSalesDataApiService::class,
         );
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/trx-mall-upload-sales-data-api.php', 'trx_mall_upload_sales_data_api'
+        );
     }
 
     /**
