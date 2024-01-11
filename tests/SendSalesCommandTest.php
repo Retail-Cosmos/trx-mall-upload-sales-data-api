@@ -7,6 +7,8 @@ use Psr\Log\LoggerInterface;
 use RetailCosmos\TrxMallUploadSalesDataApi\Enums\PaymentType;
 use RetailCosmos\TrxMallUploadSalesDataApi\Notifications\TrxApiStatusNotification;
 
+use function Pest\Laravel\artisan;
+
 beforeEach(function () {
     $this->trxLogChannel = mock(LoggerInterface::class);
 
@@ -35,7 +37,7 @@ beforeEach(function () {
 describe('failure cases without notification', function () {
 
     it('fails when date is invalid', function () {
-        $this->artisan('tangent:send-sales', [
+        artisan('tangent:send-sales', [
             '--date' => 'invalid-date',
         ])->assertExitCode(1);
     });
@@ -45,14 +47,14 @@ describe('failure cases without notification', function () {
             'trx_mall_upload_sales_data_api.api' => null,
         ]);
 
-        $this->artisan('tangent:send-sales')->assertExitCode(1);
+        artisan('tangent:send-sales')->assertExitCode(1);
     });
 
     it('fails when no stores found', function () {
         $this->serviceMock->shouldReceive('getStores')->once()
             ->andReturn([]);
 
-        $this->artisan('tangent:send-sales', [
+        artisan('tangent:send-sales', [
             '--date' => '2024-02-01',
         ])->assertExitCode(1);
     });
@@ -68,7 +70,7 @@ describe('failure cases without notification', function () {
         $this->serviceMock->shouldReceive('getSales')->once()
             ->andReturn(collect([]));
 
-        $this->artisan('tangent:send-sales', [
+        artisan('tangent:send-sales', [
             '--date' => '2024-02-01',
         ])->assertExitCode(0);
     });
@@ -94,7 +96,7 @@ describe('failure cases with notification', function () {
         $this->serviceMock->shouldReceive('getStores')->once()
             ->andReturn([]);
 
-        $this->artisan('tangent:send-sales', [
+        artisan('tangent:send-sales', [
             '--date' => '2024-02-01',
         ])->assertExitCode(1);
     });
@@ -120,7 +122,7 @@ describe('success cases without notification', function () {
         $this->serviceMock->shouldReceive('getSales')->twice()
             ->andReturn(collect($sales));
 
-        $this->artisan('tangent:send-sales', [
+        artisan('tangent:send-sales', [
             '--date' => '2024-02-01',
         ])->assertExitCode(0);
 
@@ -148,7 +150,7 @@ describe('success cases with notification', function () {
         $this->serviceMock->shouldReceive('getSales')->twice()
             ->andReturn(collect($sales));
 
-        $this->artisan('tangent:send-sales', [
+        artisan('tangent:send-sales', [
             '--date' => '2024-02-01',
         ])->assertExitCode(0);
     })->with('valid_data');
