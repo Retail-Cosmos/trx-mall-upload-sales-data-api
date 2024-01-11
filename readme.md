@@ -45,7 +45,6 @@ TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD=
 
 ```
 
-
 ## Usage
 
 Please follow these steps for sending the sales data to API.
@@ -58,8 +57,8 @@ $schedule->command('tangent:send-sales')->daily();
 
 > [!NOTE]
 > If you wish to send a specific sales, you may pass the following options to the command:
->    - `--date` - Date in the YYYY-MM-DD format to send sales for a specific date.
->    - `--store_identifier` - To send a sales for a specific store only.
+>    - `--date` - Date in the Y-m-d (2024-01-01) format to send sales for a specific date.
+>    - `--store_identifier` - To send a sales for a specific store only. check the `app/Services/TrxMallUploadSalesDataService.php` file for the store identifier.
 
 Example:
 
@@ -108,6 +107,11 @@ php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-service"
 ```bash
 php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-view"
 ```
+
+> [!NOTE]
+> We will calculate Batch ID for the sales data based on the `TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD` in the `.env` file. 
+> We will find the difference between the `TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD` and the date which we are sending the sales data for and add 1 to it. 
+> For example, if the `TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD` is `2024-01-01` and we are sending the sales data for `2024-01-02` then the batch ID will be `2`.
 
 ## Testing
 
