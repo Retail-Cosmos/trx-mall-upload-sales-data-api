@@ -92,16 +92,16 @@ php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-service"
         - `payments`: Array of payments with the following keys with the amount of the payment after discount and before GST:
             - `cash`, `tng`, `visa`, `mastercard`, `amex`, `voucher`, `othersamount` or you can use `PaymentType` enum provided by the package.
                 ```php
-                    use RetailCrm\TrxMallUploadSalesDataApi\Enums\PaymentType;
+                use RetailCrm\TrxMallUploadSalesDataApi\Enums\PaymentType;
                 ```
                 ```php
-                    PaymentType::CASH(); // cash
-                    PaymentType::TNG(); // tng
-                    PaymentType::VISA(); // visa
-                    PaymentType::MASTERCARD(); // mastercard
-                    PaymentType::AMEX(); // amex
-                    PaymentType::VOUCHER(); // voucher
-                    PaymentType::OTHERS(); // othersamount
+                PaymentType::CASH(); // cash
+                PaymentType::TNG(); // tng
+                PaymentType::VISA(); // visa
+                PaymentType::MASTERCARD(); // mastercard
+                PaymentType::AMEX(); // amex
+                PaymentType::VOUCHER(); // voucher
+                PaymentType::OTHERS(); // othersamount
                 ```
 
 4. If you want to customize the notification email, you can publish the notification view by running the following command:
