@@ -15,12 +15,12 @@ class TrxMallUploadSalesDataApiService implements TrxSalesService
     {
         return [
             [
-                'machine_id' => 123,
-                'store_identifier' => 'store1',
+                'machine_id' => 853495394,
+                'store_identifier' => 'store1', // This is the store identifier that will be used in the sales data
                 'gst_registered' => true,
             ],
             [
-                'machine_id' => 456,
+                'machine_id' => 853495395,
                 'store_identifier' => 'store2',
                 'gst_registered' => false,
             ],
