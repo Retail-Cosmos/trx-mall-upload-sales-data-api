@@ -34,7 +34,6 @@ return [
      *
      * Notification recipient configuration.
      * Specifies the name and email for email notifications.
-     * Default name: 'sir/madam'
      */
     'notifications' => [
         'mail' => [
