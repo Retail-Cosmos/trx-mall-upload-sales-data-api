@@ -30,7 +30,7 @@ return [
     ],
 
     /**
-     * ignore if you don't want receive email notification
+     * ignore if you don't want to receive email notification
      *
      * Notification recipient configuration.
      * Specifies the name and email for email notifications.
