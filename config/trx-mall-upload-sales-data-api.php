@@ -3,8 +3,8 @@
 return [
 
     /**
-     * This configuration specifies the base URI, grant type, username, and password
-     * for accessing the TRX Mall API.
+     * Configuration for accessing the TRX Mall API.
+     * Specifies the base URI, grant type, username, and password.
      */
     'api' => [
         'base_uri' => env('TRX_MALL_API_BASE_URI'),
@@ -14,23 +14,27 @@ return [
     ],
 
     /**
-     * this date will help us to determine batch_id
-     * for first date it will be 1 then 2 and so on
-     * this date should be in Y-m-d format
+     * Date used to determine the batch_id for sales uploads.
+     * The batch_id increments based on the date.
+     * for first date it will be 1, for second date it will be 2 and so on.
+     * Format: Y-m-d (e.g. 2024-12-31)
      */
     'date_of_first_sales_upload' => env('TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD'),
 
     /**
-     * The 'log' option specifies the channel to be used for logging,
-     * with a default value of 'stack'.
+     * Logging configuration.
+     * Specifies the channel to be used for logging.
      */
     'log' => [
         'channel' => env('TRX_MALL_LOG_CHANNEL', 'stack'),
     ],
 
     /**
-     * recipient for the notification
-     * mail.name and mail.email are used for the recipient of the email notification
+     * ignore if you don't want receive email notification
+     *
+     * Notification recipient configuration.
+     * Specifies the name and email for email notifications.
+     * Default name: 'sir/madam'
      */
     'notifications' => [
         'mail' => [
