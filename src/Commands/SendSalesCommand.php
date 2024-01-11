@@ -198,7 +198,7 @@ class SendSalesCommand extends Command
     private function getProcessedSales(string $date, array $stores): array
     {
         $trxSalesService = resolve(TrxMallUploadSalesDataApiService::class);
-        $batchId = Carbon::parse($date)->diffInDays(config('trx_mall_upload_sales_data_api.date_of_first_sales_upload')) + 1;
+        $batchId = $this->getBatchIdForDate($date);
 
         $processedSales = [];
         foreach ($stores as $store) {
@@ -241,5 +241,13 @@ class SendSalesCommand extends Command
         if ($messages !== '') {
             throw new \Exception($messages);
         }
+    }
+
+    private function getBatchIdForDate(string $date): int
+    {
+        $dateOfFirstSalesUpload = config('trx_mall_upload_sales_data_api.date_of_first_sales_upload');
+        $batchId = Carbon::parse($date)->diffInDays($dateOfFirstSalesUpload) + 1;
+
+        return $batchId;
     }
 }
