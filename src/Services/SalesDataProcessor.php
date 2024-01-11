@@ -92,7 +92,7 @@ class SalesDataProcessor
     private function createTwentyFourHoursSalesForStore(array $storeData): void
     {
         $date = Carbon::parse($this->date)->format('Ymd');
-        for ($i = 0; $i < 24; $i++) {
+        foreach (range(0, 23) as $i) {
             $this->preparedSales[] = ['sale' => [
                 'machineid' => $storeData['machineid'],
                 'batchid' => $this->batchId,
