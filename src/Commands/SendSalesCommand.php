@@ -89,7 +89,7 @@ class SendSalesCommand extends Command
 
             $this->info($message);
 
-            $message = 'total sales sent: '.count($sales);
+            $message = 'total sales sent: '.collect($sales)->flatten(1)->count();
 
             $this->info($message);
 
