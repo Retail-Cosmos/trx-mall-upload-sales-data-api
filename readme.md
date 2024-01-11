@@ -93,7 +93,8 @@ php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-service"
             - `cash`, `tng`, `visa`, `mastercard`, `amex`, `voucher`, `othersamount` or you can use `PaymentType` enum provided by the package.
                 ```php
                     use RetailCrm\TrxMallUploadSalesDataApi\Enums\PaymentType;
-        
+                ```
+                ```php
                     PaymentType::CASH(); // cash
                     PaymentType::TNG(); // tng
                     PaymentType::VISA(); // visa
