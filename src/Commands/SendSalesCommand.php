@@ -20,7 +20,9 @@ class SendSalesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'tangent:send-sales {--date=} {--store_identifier=}';
+    protected $signature = 'tangent:send-sales
+                {--date= : Date in Y-m-d format. Defaults to previous day.}
+                {--store_identifier= : Store identifier. If not provided, all stores will be processed.}';
 
     /**
      * The console command description.
