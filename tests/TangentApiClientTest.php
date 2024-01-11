@@ -37,117 +37,109 @@ it('throws an exception if required config is not correct', function ($config) {
     ],
 ]);
 
-it('can send sales hourly data', function () {
-    Http::fake([
-        'example.com/*' => Http::response([
-            'access_token' => 'valid_token',
-            'expires_in' => 30 * 60,
-        ]),
-    ]);
+describe('with valid config', function () {
 
-    $client = new TangentApiClient([
-        'base_uri' => 'http://example.com',
-        'grant_type' => 'client_credentials',
-        'username' => 'test_user',
-        'password' => 'test_password',
-    ]);
-
-    $response = $client->sendSalesHourly([
-        [
-            'store_id' => 'test_store_id',
-            'date' => '2021-01-01',
-            'hour' => '00',
-            'payment_type' => 'cash',
-            'amount' => '100.00',
-            'quantity' => '1',
-        ],
-    ]); // no need of exact data I guess
-
-    Http::assertSent(function ($request) {
-        return $request->url() == 'http://example.com/SalesHourly';
+    beforeEach(function () {
+        $this->config = [
+            'base_uri' => 'http://example.com',
+            'grant_type' => 'client_credentials',
+            'username' => 'test_user',
+            'password' => 'test_password',
+        ];
     });
 
-    expect($response->ok())->toBeTrue();
-});
+    it('can send sales hourly data', function () {
+        Http::fake([
+            'example.com/*' => Http::response([
+                'access_token' => 'valid_token',
+                'expires_in' => 30 * 60,
+            ]),
+        ]);
 
-it('returns a valid token from cache', function () {
-    Http::fake();
+        $client = new TangentApiClient($this->config);
 
-    Cache::shouldReceive('get')
-        ->with('trx-mall-upload-sales-data-api-token')
-        ->andReturn('cached_token');
+        $response = $client->sendSalesHourly([
+            [
+                'store_id' => 'test_store_id',
+                'date' => '2024-01-01',
+                'hour' => '00',
+                'payment_type' => 'cash',
+                'amount' => '100.00',
+                'quantity' => '1',
+            ],
+        ]);
 
-    $client = new TangentApiClient([
-        'base_uri' => 'http://example.com',
-        'grant_type' => 'client_credentials',
-        'username' => 'test_user',
-        'password' => 'test_password',
-    ]);
+        Http::assertSent(function ($request) {
+            return $request->url() == 'http://example.com/SalesHourly';
+        });
 
-    $method = new ReflectionMethod(TangentApiClient::class, 'getToken');
+        expect($response->ok())->toBeTrue();
+    });
 
-    $method->setAccessible(true);
+    it('returns a valid token from cache', function () {
+        Http::fake();
 
-    $token = $method->invoke($client);
+        Cache::shouldReceive('get')
+            ->with('trx-mall-upload-sales-data-api-token')
+            ->andReturn('cached_token');
 
-    expect($token)->toBe('cached_token');
-});
+        $client = new TangentApiClient($this->config);
 
-it('fetches a new token and caches it', function () {
-    Cache::shouldReceive('get')
-        ->with('trx-mall-upload-sales-data-api-token')
-        ->andReturn(null);
-
-    Http::fake([
-        'example.com/*' => Http::response([
-            'access_token' => 'new_token',
-            'expires_in' => 1800,
-        ]),
-    ]);
-
-    Cache::shouldReceive('put')
-        ->with('trx-mall-upload-sales-data-api-token', 'new_token', \Mockery::type('int'))
-        ->once();
-
-    $client = new TangentApiClient([
-        'base_uri' => 'http://example.com',
-        'grant_type' => 'client_credentials',
-        'username' => 'test_user',
-        'password' => 'test_password',
-    ]);
-
-    $method = new ReflectionMethod(TangentApiClient::class, 'getToken');
-
-    $method->setAccessible(true);
-
-    $token = $method->invoke($client);
-
-    expect($token)->toBe('new_token');
-});
-
-it('throws an exception if token retrieval fails', function () {
-    Cache::shouldReceive('get')
-        ->with('trx-mall-upload-sales-data-api-token')
-        ->andReturn(null);
-
-    Http::fake([
-        'example.com/*' => Http::response([
-            'error_description' => 'Token retrieval failed',
-        ], 500),
-    ]);
-
-    $client = new TangentApiClient([
-        'base_uri' => 'http://example.com',
-        'grant_type' => 'client_credentials',
-        'username' => 'test_user',
-        'password' => 'test_password',
-    ]);
-
-    expect(function () use ($client) {
         $method = new ReflectionMethod(TangentApiClient::class, 'getToken');
 
         $method->setAccessible(true);
 
-        $method->invoke($client);
-    })->toThrow(\Exception::class, 'Token retrieval failed');
+        $token = $method->invoke($client);
+
+        expect($token)->toBe('cached_token');
+    });
+
+    it('fetches a new token and caches it', function () {
+        Cache::shouldReceive('get')
+            ->with('trx-mall-upload-sales-data-api-token')
+            ->andReturn(null);
+
+        Http::fake([
+            'example.com/*' => Http::response([
+                'access_token' => 'new_token',
+                'expires_in' => 1800,
+            ]),
+        ]);
+
+        Cache::shouldReceive('put')
+            ->with('trx-mall-upload-sales-data-api-token', 'new_token', \Mockery::type('int'))
+            ->once();
+
+        $client = new TangentApiClient($this->config);
+
+        $method = new ReflectionMethod(TangentApiClient::class, 'getToken');
+
+        $method->setAccessible(true);
+
+        $token = $method->invoke($client);
+
+        expect($token)->toBe('new_token');
+    });
+
+    it('throws an exception if token retrieval fails', function () {
+        Cache::shouldReceive('get')
+            ->with('trx-mall-upload-sales-data-api-token')
+            ->andReturn(null);
+
+        Http::fake([
+            'example.com/*' => Http::response([
+                'error_description' => 'Token retrieval failed',
+            ], 500),
+        ]);
+
+        $client = new TangentApiClient($this->config);
+
+        expect(function () use ($client) {
+            $method = new ReflectionMethod(TangentApiClient::class, 'getToken');
+
+            $method->setAccessible(true);
+
+            $method->invoke($client);
+        })->toThrow(\Exception::class, 'Token retrieval failed');
+    });
 });
