@@ -51,13 +51,15 @@ class TangentApiClient
             }
         }
 
-        if (validator($this->config, [
+        $validator = validator($this->config, [
             'base_uri' => 'required|url',
             'grant_type' => 'required|string',
             'username' => 'required|string',
             'password' => 'required|string',
-        ])->fails()) {
-            throw new \Exception('Invalid config');
+        ]);
+
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first());
         }
     }
 
