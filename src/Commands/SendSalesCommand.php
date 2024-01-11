@@ -95,11 +95,7 @@ class SendSalesCommand extends Command
 
             $this->trxLogChannel->info($message);
 
-            if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
-                $name = config('trx_mall_upload_sales_data_api.notifications.mail.name');
-                Notification::route('mail', $email)
-                    ->notify(new TrxApiStatusNotification($name, 'success', $message));
-            }
+            $this->notify($message, 'success');
 
             return 0;
         } catch (\Exception $e) {
@@ -113,11 +109,7 @@ class SendSalesCommand extends Command
 
             $this->error($e->getMessage());
 
-            if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
-                $name = config('trx_mall_upload_sales_data_api.notifications.mail.name');
-                Notification::route('mail', $email)
-                    ->notify(new TrxApiStatusNotification($name, 'error', $e->getMessage()));
-            }
+            $this->notify($e->getMessage(), 'error');
 
             return 1;
         }
@@ -240,6 +232,15 @@ class SendSalesCommand extends Command
 
         if ($messages !== '') {
             throw new \Exception($messages);
+        }
+    }
+
+    private function notify(string $message, string $status): void
+    {
+        if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
+            $name = config('trx_mall_upload_sales_data_api.notifications.mail.name');
+            Notification::route('mail', $email)
+                ->notify(new TrxApiStatusNotification($name, $status, $message));
         }
     }
 
