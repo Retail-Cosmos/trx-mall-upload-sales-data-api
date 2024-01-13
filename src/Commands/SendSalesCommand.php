@@ -40,7 +40,7 @@ class SendSalesCommand extends Command
     {
         parent::__construct();
 
-        $this->trxLogChannel = Log::channel(config('trx_mall_upload_sales_data_api.log.channel'));
+        $this->trxLogChannel = Log::channel(config('trx_mall_upload_sales_data_api.log.channel', 'stack'));
     }
 
     /**
