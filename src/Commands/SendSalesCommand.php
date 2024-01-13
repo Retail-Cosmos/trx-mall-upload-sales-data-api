@@ -200,8 +200,8 @@ class SendSalesCommand extends Command
             if ($sales->isEmpty()) {
                 continue;
             }
-            $salesService = new SalesDataProcessor($date, $batchId);
-            $processedSales[$store['store_identifier']] = $salesService->process($sales, $store);
+            $processedSales[$store['store_identifier']] = (new SalesDataProcessor($date, $batchId))
+                ->process($sales, $store);
         }
 
         return $processedSales;
