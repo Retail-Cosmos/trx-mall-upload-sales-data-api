@@ -218,9 +218,7 @@ class SendSalesCommand extends Command
             return;
         }
 
-        $config = config('trx_mall_upload_sales_data_api.api', []);
-
-        $client = new TangentApiClient($config);
+        $client = new TangentApiClient(config('trx_mall_upload_sales_data_api.api', []));
 
         $messages = '';
 
@@ -248,9 +246,7 @@ class SendSalesCommand extends Command
 
     private function getBatchIdForDate(string $date): int
     {
-        $dateOfFirstSalesUpload = config('trx_mall_upload_sales_data_api.date_of_first_sales_upload');
-        $batchId = Carbon::parse($date)->diffInDays($dateOfFirstSalesUpload) + 1;
-
-        return $batchId;
+        return Carbon::parse($date)
+        ->diffInDays(config('trx_mall_upload_sales_data_api.date_of_first_sales_upload')) + 1;
     }
 }
