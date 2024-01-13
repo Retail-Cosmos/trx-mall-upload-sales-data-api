@@ -218,7 +218,7 @@ class SendSalesCommand extends Command
             return;
         }
 
-        $config = config('trx_mall_upload_sales_data_api.api');
+        $config = config('trx_mall_upload_sales_data_api.api', []);
 
         $client = new TangentApiClient($config);
 
