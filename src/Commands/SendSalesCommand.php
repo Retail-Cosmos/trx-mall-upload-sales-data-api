@@ -250,6 +250,6 @@ class SendSalesCommand extends Command
     private function getBatchIdForDate(string $date): int
     {
         return Carbon::parse($date)
-        ->diffInDays(config('trx_mall_upload_sales_data_api.date_of_first_sales_upload')) + 1;
+            ->diffInDays(config('trx_mall_upload_sales_data_api.date_of_first_sales_upload')) + 1;
     }
 }
