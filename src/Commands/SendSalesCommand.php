@@ -223,6 +223,9 @@ class SendSalesCommand extends Command
         $messages = '';
 
         foreach ($groupedSales as $storeIdentifier => $sales) {
+            if (empty($sales)) {
+                continue;
+            }
             $response = $client->sendSalesHourly($sales);
             if (! $response->ok()) {
                 $messages .= 'got error while sending sales for store '.$storeIdentifier.PHP_EOL.
