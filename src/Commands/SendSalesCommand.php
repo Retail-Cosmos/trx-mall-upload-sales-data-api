@@ -20,7 +20,9 @@ class SendSalesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'tangent:send-sales {--date=} {--store_identifier=}';
+    protected $signature = 'tangent:send-sales
+                {--date= : Date in Y-m-d format. Defaults to previous day.}
+                {--store_identifier= : Store identifier. If not provided, all stores will be processed.}';
 
     /**
      * The console command description.
@@ -38,7 +40,7 @@ class SendSalesCommand extends Command
     {
         parent::__construct();
 
-        $this->trxLogChannel = Log::channel(config('trx_mall_upload_sales_data_api.log.channel'));
+        $this->trxLogChannel = Log::channel(config('trx_mall_upload_sales_data_api.log.channel', 'stack'));
     }
 
     /**
@@ -89,17 +91,13 @@ class SendSalesCommand extends Command
 
             $this->info($message);
 
-            $message = 'total sales sent: '.count($sales);
+            $message = 'total sales sent: '.collect($sales)->flatten(1)->count();
 
             $this->info($message);
 
             $this->trxLogChannel->info($message);
 
-            if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
-                $name = config('trx_mall_upload_sales_data_api.notifications.mail.name');
-                Notification::route('mail', $email)
-                    ->notify(new TrxApiStatusNotification($name, 'success', $message));
-            }
+            $this->notify($message, 'success');
 
             return 0;
         } catch (\Exception $e) {
@@ -113,11 +111,7 @@ class SendSalesCommand extends Command
 
             $this->error($e->getMessage());
 
-            if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
-                $name = config('trx_mall_upload_sales_data_api.notifications.mail.name');
-                Notification::route('mail', $email)
-                    ->notify(new TrxApiStatusNotification($name, 'error', $e->getMessage()));
-            }
+            $this->notify($e->getMessage(), 'error');
 
             return 1;
         }
@@ -129,7 +123,7 @@ class SendSalesCommand extends Command
     private function validateOptions(): void
     {
         $validator = validator($this->options(), [
-            'date' => 'nullable|date_format:Y-m-d',
+            'date' => 'nullable|date_format:Y-m-d|before_or_equal:today',
         ]);
 
         if ($validator->fails()) {
@@ -142,7 +136,7 @@ class SendSalesCommand extends Command
      */
     private function validateConfig(): void
     {
-        $requiredAttributeMessage = 'The :attribute needs to be configured';
+        $requiredConfigMessage = 'The :attribute needs to be configured';
         $validator = validator(config('trx_mall_upload_sales_data_api', []), [
             'log.channel' => 'required|string',
             'api.base_uri' => 'required|url',
@@ -151,10 +145,10 @@ class SendSalesCommand extends Command
             'api.password' => 'required|string',
             'notifications.mail.name' => 'nullable|string',
             'notifications.mail.email' => 'nullable|email',
-            'date_of_first_sales_upload' => 'required|date_format:Y-m-d,before_or_equal:now',
+            'date_of_first_sales_upload' => 'required|date_format:Y-m-d|before_or_equal:today',
         ], [
-            '*.required' => $requiredAttributeMessage,
-            '*.*.required' => $requiredAttributeMessage,
+            '*.required' => $requiredConfigMessage,
+            '*.*.required' => $requiredConfigMessage,
         ], [
             'log.channel' => 'TRX_MALL_LOG_CHANNEL',
             'api.base_uri' => 'TRX_MALL_API_BASE_URI',
@@ -198,7 +192,7 @@ class SendSalesCommand extends Command
     private function getProcessedSales(string $date, array $stores): array
     {
         $trxSalesService = resolve(TrxMallUploadSalesDataApiService::class);
-        $batchId = Carbon::parse($date)->diffInDays(config('trx_mall_upload_sales_data_api.date_of_first_sales_upload')) + 1;
+        $batchId = $this->getBatchIdForDate($date);
 
         $processedSales = [];
         foreach ($stores as $store) {
@@ -206,8 +200,8 @@ class SendSalesCommand extends Command
             if ($sales->isEmpty()) {
                 continue;
             }
-            $salesService = new SalesDataProcessor($date, $batchId);
-            $processedSales[$store['store_identifier']] = $salesService->process($sales, $store);
+            $processedSales[$store['store_identifier']] = (new SalesDataProcessor($date, $batchId))
+                ->process($sales, $store);
         }
 
         return $processedSales;
@@ -224,16 +218,17 @@ class SendSalesCommand extends Command
             return;
         }
 
-        $config = config('trx_mall_upload_sales_data_api.api');
-
-        $client = new TangentApiClient($config);
+        $client = new TangentApiClient(config('trx_mall_upload_sales_data_api.api', []));
 
         $messages = '';
 
         foreach ($groupedSales as $storeIdentifier => $sales) {
+            if (empty($sales)) {
+                continue;
+            }
             $response = $client->sendSalesHourly($sales);
             if (! $response->ok()) {
-                $messages .= 'got error while sending sales for store '.$storeIdentifier.
+                $messages .= 'got error while sending sales for store '.$storeIdentifier.PHP_EOL.
                 'error '.$response->json('errors.0.message').PHP_EOL;
             }
         }
@@ -241,5 +236,20 @@ class SendSalesCommand extends Command
         if ($messages !== '') {
             throw new \Exception($messages);
         }
+    }
+
+    private function notify(string $message, string $status): void
+    {
+        if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
+            $name = config('trx_mall_upload_sales_data_api.notifications.mail.name');
+            Notification::route('mail', $email)
+                ->notify(new TrxApiStatusNotification($name, $status, $message));
+        }
+    }
+
+    private function getBatchIdForDate(string $date): int
+    {
+        return Carbon::parse($date)
+            ->diffInDays(config('trx_mall_upload_sales_data_api.date_of_first_sales_upload')) + 1;
     }
 }

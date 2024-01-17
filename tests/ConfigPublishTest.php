@@ -32,6 +32,7 @@ it('has all required configuration available', function () {
         'username',
         'password',
     ]);
+
     expect(array_keys($config['log']))->toEqual([
         'channel',
     ]);

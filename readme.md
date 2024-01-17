@@ -39,32 +39,32 @@ TRX_MALL_LOG_CHANNEL=stack
 TRX_MALL_NOTIFICATION_MAIL_NAME=
 TRX_MALL_NOTIFICATION_MAIL_EMAIL=
 
-# mandatory In Y-m-d format (2024-01-01) 
+# mandatory In Y-m-d format (2024-12-31) 
 # It is used to get Batch ID for the sales data
 TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD=
 
 ```
 
-
 ## Usage
 
 Please follow these steps for sending the sales data to API.
 
-1. Add a [scheduler](https://laravel.com/docs/10.x/scheduling) in your Laravel project to call the command `tangent:send-sales` daily at midnight. It sends the sales for the previous day for each store as returned from the application.
+1. Add a [scheduler](https://laravel.com/docs/10.x/scheduling) in your [Laravel](https://laravel.com) project to call the command `tangent:send-sales` daily at midnight. It sends the sales for the previous day for each store as returned from the application.
 
 ```php
 $schedule->command('tangent:send-sales')->daily();
 ```
 
 > [!NOTE]
+> this command will send the sales for the previous day for each store as returned from the application.
 > If you wish to send a specific sales, you may pass the following options to the command:
->    - `--date` - Date in the YYYY-MM-DD format to send sales for a specific date.
->    - `--store_identifier` - To send a sales for a specific store only.
+>    - `--date` - Date in the Y-m-d (2024-12-31) format to send sales for a specific date.
+>    - `--store_identifier` - To send a sales for a specific store only. check the `app/Services/TrxMallUploadSalesDataService.php` file for the store identifier.
 
 Example:
 
 ```bash
-php artisan tangent:send-sales --date=2024-01-01 --store_identifier=store1
+php artisan tangent:send-sales --date=2024-11-31 --store_identifier=store1
 ```
 If you want to schedule it for a specific store
 
@@ -93,7 +93,8 @@ php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-service"
             - `cash`, `tng`, `visa`, `mastercard`, `amex`, `voucher`, `othersamount` or you can use `PaymentType` enum provided by the package.
                 ```php
                 use RetailCrm\TrxMallUploadSalesDataApi\Enums\PaymentType;
-    
+                ```
+                ```php
                 PaymentType::CASH(); // cash
                 PaymentType::TNG(); // tng
                 PaymentType::VISA(); // visa
@@ -108,6 +109,11 @@ php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-service"
 ```bash
 php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-view"
 ```
+
+> [!NOTE]
+> We will calculate Batch ID for the sales data based on the `TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD` in the `.env` file. 
+> We will find the difference between the `TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD` and the date which we are sending the sales data for and add 1 to it. 
+> For example, if the `TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD` is `2024-01-01` and we are sending the sales data for `2024-01-02` then the batch ID will be `2`.
 
 ## Testing
 

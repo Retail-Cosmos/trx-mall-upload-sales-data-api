@@ -4,7 +4,6 @@ namespace RetailCosmos\TrxMallUploadSalesDataApi\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
 use RetailCosmos\TrxMallUploadSalesDataApi\Enums\PaymentType;
 
 class SalesDataProcessor
@@ -66,7 +65,7 @@ class SalesDataProcessor
      */
     private function validate(array $sales): void
     {
-        $validator = Validator::make($sales, [
+        $validator = validator($sales, [
             '*.happened_at' => ['required', 'date_format:Y-m-d H:i:s', function ($attribute, $value, $fail) {
                 if (Carbon::parse($value)->format('Y-m-d') !== $this->date) {
                     $fail('One of the sales is not on the date given');
@@ -92,7 +91,7 @@ class SalesDataProcessor
     private function createTwentyFourHoursSalesForStore(array $storeData): void
     {
         $date = Carbon::parse($this->date)->format('Ymd');
-        for ($i = 0; $i < 24; $i++) {
+        foreach (range(0, 23) as $i) {
             $this->preparedSales[] = ['sale' => [
                 'machineid' => $storeData['machineid'],
                 'batchid' => $this->batchId,

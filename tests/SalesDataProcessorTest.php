@@ -3,7 +3,7 @@
 use RetailCosmos\TrxMallUploadSalesDataApi\Enums\PaymentType;
 use RetailCosmos\TrxMallUploadSalesDataApi\Services\SalesDataProcessor;
 
-it('transforms the sales data', function () {
+it('can transforms the sales data', function () {
     $sales = collect([
         [
             'happened_at' => '2024-02-01 00:00:00',

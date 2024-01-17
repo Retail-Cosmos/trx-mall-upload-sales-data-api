@@ -20,12 +20,25 @@ it('validates and prepare the store data', function () {
 
     $processedData = $processor->process($storeData);
 
-    expect($processedData[0]['gstregistered'])->toBe('Y');
-    expect($processedData[1]['gstregistered'])->toBe('N');
+    expect($processedData)->toBe([[
+        'store_identifier' => 'store1',
+        'gstregistered' => 'Y',
+        'machineid' => '123',
+    ], [
+        'store_identifier' => 'store2',
+        'gstregistered' => 'N',
+        'machineid' => '456',
+    ]]);
 });
 
-it('throws exception for invalid store data', function () {
-    $storeData = [
+it('throws exception for invalid store data', function ($storeData) {
+    $processor = new StoreDataProcessor();
+
+    expect(function () use ($processor, $storeData) {
+        $processor->process($storeData);
+    })->toThrow(\Exception::class);
+})->with([
+    'duplicate machine id' => [
         [
             'machine_id' => '123',
             'store_identifier' => 'store1',
@@ -36,11 +49,62 @@ it('throws exception for invalid store data', function () {
             'store_identifier' => 'store2',
             'gst_registered' => false,
         ],
-    ];
-
-    $processor = new StoreDataProcessor();
-
-    expect(function () use ($processor, $storeData) {
-        $processor->process($storeData);
-    })->toThrow(\Exception::class);
-});
+    ],
+    'duplicate store identifier' => [
+        [
+            'machine_id' => '123',
+            'store_identifier' => 'store1',
+            'gst_registered' => true,
+        ],
+        [
+            'machine_id' => '456',
+            'store_identifier' => 'store1', // Duplicate store_identifier
+            'gst_registered' => false,
+        ],
+    ],
+    'missing machine id' => [
+        [
+            'machine_id' => '123',
+            'store_identifier' => 'store1',
+            'gst_registered' => true,
+        ],
+        [
+            'store_identifier' => 'store2',
+            'gst_registered' => false,
+        ],
+    ],
+    'missing store identifier' => [
+        [
+            'machine_id' => '123',
+            'store_identifier' => 'store1',
+            'gst_registered' => true,
+        ],
+        [
+            'machine_id' => '456',
+            'gst_registered' => false,
+        ],
+    ],
+    'missing gst registered' => [
+        [
+            'machine_id' => '123',
+            'store_identifier' => 'store1',
+            'gst_registered' => true,
+        ],
+        [
+            'machine_id' => '456',
+            'store_identifier' => 'store2',
+        ],
+    ],
+    'invalid gst registered' => [
+        [
+            'machine_id' => '123',
+            'store_identifier' => 'store1',
+            'gst_registered' => true,
+        ],
+        [
+            'machine_id' => '456',
+            'store_identifier' => 'store2',
+            'gst_registered' => 'invalid',
+        ],
+    ],
+]);

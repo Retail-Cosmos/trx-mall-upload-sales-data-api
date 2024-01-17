@@ -6,6 +6,7 @@ class StoreDataProcessor
 {
     /**
      * @param  array<string,mixed>  $storeData
+     * @return array<string,mixed>
      *
      * @throws \Exception
      */
