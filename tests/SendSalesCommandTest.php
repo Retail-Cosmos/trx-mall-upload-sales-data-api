@@ -55,7 +55,7 @@ describe('failure cases without notification', function () {
             ->andReturn([]);
 
         artisan('trx:send-sales', [
-            '--date' => '2024-02-01',
+            '--date' => '2024-01-11',
         ])->assertExitCode(1);
     });
 
@@ -71,7 +71,7 @@ describe('failure cases without notification', function () {
             ->andReturn(collect([]));
 
         artisan('trx:send-sales', [
-            '--date' => '2024-02-01',
+            '--date' => '2024-01-11',
         ])->assertExitCode(0);
     });
 
@@ -97,7 +97,7 @@ describe('failure cases with notification', function () {
             ->andReturn([]);
 
         artisan('trx:send-sales', [
-            '--date' => '2024-02-01',
+            '--date' => '2024-01-11',
         ])->assertExitCode(1);
     });
 
@@ -123,7 +123,7 @@ describe('success cases without notification', function () {
             ->andReturn(collect($sales));
 
         artisan('trx:send-sales', [
-            '--date' => '2024-02-01',
+            '--date' => '2024-01-11',
         ])->assertExitCode(0);
 
     })->with('valid_data');
@@ -151,7 +151,7 @@ describe('success cases with notification', function () {
             ->andReturn(collect($sales));
 
         artisan('trx:send-sales', [
-            '--date' => '2024-02-01',
+            '--date' => '2024-01-11',
         ])->assertExitCode(0);
     })->with('valid_data');
 
@@ -183,7 +183,7 @@ dataset('valid_data', [[
     ],
     [
         [
-            'happened_at' => '2024-02-01 00:00:00',
+            'happened_at' => '2024-01-11 00:00:00',
             'net_amount' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
@@ -197,7 +197,7 @@ dataset('valid_data', [[
                 PaymentType::OTHERS() => 57.99,
             ],
         ], [
-            'happened_at' => '2024-02-01 00:00:00',
+            'happened_at' => '2024-01-11 00:00:00',
             'net_amount' => 391.54,
             'gst' => 12.65,
             'discount' => 10,
@@ -212,7 +212,7 @@ dataset('valid_data', [[
             ],
         ],
         [
-            'happened_at' => '2024-02-01 00:00:00',
+            'happened_at' => '2024-01-11 00:00:00',
             'net_amount' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
@@ -226,7 +226,7 @@ dataset('valid_data', [[
                 PaymentType::OTHERS() => 57.99,
             ],
         ], [
-            'happened_at' => '2024-02-01 00:00:00',
+            'happened_at' => '2024-01-11 00:00:00',
             'net_amount' => 391.54,
             'gst' => 12.65,
             'discount' => 10,

@@ -122,8 +122,12 @@ class SendSalesCommand extends Command
      */
     private function validateOptions(): void
     {
+        if ($this->option('date') === null) {
+            return;
+        }
+
         $validator = validator($this->options(), [
-            'date' => 'nullable|date_format:Y-m-d|before_or_equal:today',
+            'date' => ['nullable', 'before_or_equal:today', 'date_format:Y-m-d'],
         ]);
 
         if ($validator->fails()) {
