@@ -42,13 +42,32 @@ describe('failure cases without notification', function () {
         ])->assertExitCode(1);
     });
 
-    it('fails when config is invalid', function () {
-        config([
-            'trx_mall_upload_sales_data_api.api' => null,
-        ]);
+    it('fails when config is invalid', function ($invalidConfig) {
+        config($invalidConfig);
 
         artisan('trx:send-sales')->assertExitCode(1);
-    });
+    })->with([
+        'missing_base_uri' => [
+            'trx_mall_upload_sales_data_api.api' => [
+                'grant_type' => 'password',
+                'username' => 'username',
+                'password' => 'password',
+            ],
+        ],
+        'missing_date_of_first_sales_upload' => [
+            'trx_mall_upload_sales_data_api.date_of_first_sales_upload' => null,
+        ],
+        'invalid_base_uri' => [
+            'trx_mall_upload_sales_data_api.api' => [
+                'base_uri' => 'example.com',
+                'username' => 'username',
+                'password' => 'password',
+            ],
+        ],
+        'invalid_date_of_first_sales_upload' => [
+            'trx_mall_upload_sales_data_api.date_of_first_sales_upload' => 'invalid-date',
+        ],
+    ]);
 
     it('fails when no stores found', function () {
         $this->serviceMock->shouldReceive('getStores')->once()
