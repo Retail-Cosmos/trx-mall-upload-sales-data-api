@@ -10,9 +10,9 @@ use RetailCosmos\TrxMallUploadSalesDataApi\Notifications\TrxApiStatusNotificatio
 use function Pest\Laravel\artisan;
 
 beforeEach(function () {
-    $this->trxLogChannel = mock(LoggerInterface::class);
+    $this->trxLogChannel = Mockery::mock(LoggerInterface::class);
 
-    $this->serviceMock = mock(TrxMallUploadSalesDataApiService::class);
+    $this->serviceMock = Mockery::mock(TrxMallUploadSalesDataApiService::class);
     $this->app->instance(TrxMallUploadSalesDataApiService::class, $this->serviceMock);
 
     config([
