@@ -6,7 +6,7 @@ use RetailCosmos\TrxMallUploadSalesDataApi\Services\SalesDataProcessor;
 it('can transforms the sales data', function () {
     $sales = collect([
         [
-            'happened_at' => '2024-02-01 00:00:00',
+            'happened_at' => '2024-01-11 00:00:00',
             'net_amount' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
@@ -20,7 +20,7 @@ it('can transforms the sales data', function () {
                 PaymentType::OTHERS() => 57.99,
             ],
         ], [
-            'happened_at' => '2024-02-01 00:00:00',
+            'happened_at' => '2024-01-11 00:00:00',
             'net_amount' => 391.54,
             'gst' => 12.65,
             'discount' => 10,
@@ -40,7 +40,7 @@ it('can transforms the sales data', function () {
         'gstregistered' => 'Y',
     ];
 
-    $processor = new SalesDataProcessor('2024-02-01', 1);
+    $processor = new SalesDataProcessor('2024-01-11', 1);
     $result = $processor->process($sales, $storeData);
 
     expect(count($result))->toBe(24);
@@ -50,7 +50,7 @@ it('can transforms the sales data', function () {
     expect($sale['sale'])->toBe([
         'machineid' => '123',
         'batchid' => 1,
-        'date' => '20240201',
+        'date' => '20240111',
         'hour' => 0,
         'receiptcount' => 2,
         'gto' => 583.08,
@@ -74,7 +74,7 @@ it('throws exception when sales data is invalid', function ($sales) {
         'gstregistered' => 'Y',
     ];
 
-    $processor = new SalesDataProcessor('2024-02-01', 1);
+    $processor = new SalesDataProcessor('2024-01-11', 1);
     $processor->process($sales, $storeData);
 })->with([
     'invalid date' => [
@@ -99,7 +99,7 @@ it('throws exception when sales data is invalid', function ($sales) {
     'one of key is missing' => [
         [
             [
-                'happened_at' => '2024-02-01 00:00:00',
+                'happened_at' => '2024-01-11 00:00:00',
                 'net_amount' => 191.54,
                 'gst' => 1.55,
                 'discount' => 0,
@@ -113,7 +113,7 @@ it('throws exception when sales data is invalid', function ($sales) {
                     PaymentType::OTHERS() => 57.99,
                 ],
             ], [
-                'happened_at' => '2024-02-01 00:00:00',
+                'happened_at' => '2024-01-11 00:00:00',
                 'net_amount' => 391.54,
                 'gst' => 12.65,
                 'payments' => [

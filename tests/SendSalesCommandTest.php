@@ -10,9 +10,9 @@ use RetailCosmos\TrxMallUploadSalesDataApi\Notifications\TrxApiStatusNotificatio
 use function Pest\Laravel\artisan;
 
 beforeEach(function () {
-    $this->trxLogChannel = mock(LoggerInterface::class);
+    $this->trxLogChannel = Mockery::mock(LoggerInterface::class);
 
-    $this->serviceMock = mock(TrxMallUploadSalesDataApiService::class);
+    $this->serviceMock = Mockery::mock(TrxMallUploadSalesDataApiService::class);
     $this->app->instance(TrxMallUploadSalesDataApiService::class, $this->serviceMock);
 
     config([
@@ -42,20 +42,39 @@ describe('failure cases without notification', function () {
         ])->assertExitCode(1);
     });
 
-    it('fails when config is invalid', function () {
-        config([
-            'trx_mall_upload_sales_data_api.api' => null,
-        ]);
+    it('fails when config is invalid', function ($invalidConfig) {
+        config($invalidConfig);
 
         artisan('trx:send-sales')->assertExitCode(1);
-    });
+    })->with([
+        'missing_base_uri' => [
+            'trx_mall_upload_sales_data_api.api' => [
+                'grant_type' => 'password',
+                'username' => 'username',
+                'password' => 'password',
+            ],
+        ],
+        'missing_date_of_first_sales_upload' => [
+            'trx_mall_upload_sales_data_api.date_of_first_sales_upload' => null,
+        ],
+        'invalid_base_uri' => [
+            'trx_mall_upload_sales_data_api.api' => [
+                'base_uri' => 'example.com',
+                'username' => 'username',
+                'password' => 'password',
+            ],
+        ],
+        'invalid_date_of_first_sales_upload' => [
+            'trx_mall_upload_sales_data_api.date_of_first_sales_upload' => 'invalid-date',
+        ],
+    ]);
 
     it('fails when no stores found', function () {
         $this->serviceMock->shouldReceive('getStores')->once()
             ->andReturn([]);
 
         artisan('trx:send-sales', [
-            '--date' => '2024-02-01',
+            '--date' => '2024-01-11',
         ])->assertExitCode(1);
     });
 
@@ -71,7 +90,7 @@ describe('failure cases without notification', function () {
             ->andReturn(collect([]));
 
         artisan('trx:send-sales', [
-            '--date' => '2024-02-01',
+            '--date' => '2024-01-11',
         ])->assertExitCode(0);
     });
 
@@ -97,7 +116,7 @@ describe('failure cases with notification', function () {
             ->andReturn([]);
 
         artisan('trx:send-sales', [
-            '--date' => '2024-02-01',
+            '--date' => '2024-01-11',
         ])->assertExitCode(1);
     });
 
@@ -123,7 +142,7 @@ describe('success cases without notification', function () {
             ->andReturn(collect($sales));
 
         artisan('trx:send-sales', [
-            '--date' => '2024-02-01',
+            '--date' => '2024-01-11',
         ])->assertExitCode(0);
 
     })->with('valid_data');
@@ -151,7 +170,7 @@ describe('success cases with notification', function () {
             ->andReturn(collect($sales));
 
         artisan('trx:send-sales', [
-            '--date' => '2024-02-01',
+            '--date' => '2024-01-11',
         ])->assertExitCode(0);
     })->with('valid_data');
 
@@ -183,7 +202,7 @@ dataset('valid_data', [[
     ],
     [
         [
-            'happened_at' => '2024-02-01 00:00:00',
+            'happened_at' => '2024-01-11 00:00:00',
             'net_amount' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
@@ -197,7 +216,7 @@ dataset('valid_data', [[
                 PaymentType::OTHERS() => 57.99,
             ],
         ], [
-            'happened_at' => '2024-02-01 00:00:00',
+            'happened_at' => '2024-01-11 00:00:00',
             'net_amount' => 391.54,
             'gst' => 12.65,
             'discount' => 10,
@@ -212,7 +231,7 @@ dataset('valid_data', [[
             ],
         ],
         [
-            'happened_at' => '2024-02-01 00:00:00',
+            'happened_at' => '2024-01-11 00:00:00',
             'net_amount' => 191.54,
             'gst' => 1.55,
             'discount' => 0,
@@ -226,7 +245,7 @@ dataset('valid_data', [[
                 PaymentType::OTHERS() => 57.99,
             ],
         ], [
-            'happened_at' => '2024-02-01 00:00:00',
+            'happened_at' => '2024-01-11 00:00:00',
             'net_amount' => 391.54,
             'gst' => 12.65,
             'discount' => 10,
