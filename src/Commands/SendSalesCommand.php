@@ -170,7 +170,7 @@ class SendSalesCommand extends Command
     }
 
     /**
-     * @return array<int,mixed>
+     * @return array<string,mixed>
      *
      * @throws \Exception
      */
@@ -188,8 +188,8 @@ class SendSalesCommand extends Command
     }
 
     /**
-     * @param  array<int,mixed>  $stores
-     * @return array<int,mixed>
+     * @param  array<string,mixed>  $stores
+     * @return array<string,mixed>
      *
      * @throws \Exception
      */
@@ -212,7 +212,7 @@ class SendSalesCommand extends Command
     }
 
     /**
-     * @param  array<int,mixed>  $groupedSales
+     * @param  array<string,mixed>  $groupedSales
      *
      * @throws \Exception
      */
