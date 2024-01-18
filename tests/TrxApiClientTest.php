@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use RetailCosmos\TrxMallUploadSalesDataApi\Clients\TangentApiClient;
+use RetailCosmos\TrxMallUploadSalesDataApi\Clients\TrxApiClient;
 
 it('throws an exception if required config is not correct', function ($config) {
-    expect(fn () => new TangentApiClient($config))
+    expect(fn () => new TrxApiClient($config))
         ->toThrow(\Exception::class);
 })->with([
     'empty config' => [
@@ -56,7 +56,7 @@ describe('with valid config', function () {
             ]),
         ]);
 
-        $client = new TangentApiClient($this->config);
+        $client = new TrxApiClient($this->config);
 
         $response = $client->sendSalesHourly([
             [
@@ -83,9 +83,9 @@ describe('with valid config', function () {
             ->with('trx-mall-upload-sales-data-api-token')
             ->andReturn('cached_token');
 
-        $client = new TangentApiClient($this->config);
+        $client = new TrxApiClient($this->config);
 
-        $method = new ReflectionMethod(TangentApiClient::class, 'getToken');
+        $method = new ReflectionMethod(TrxApiClient::class, 'getToken');
 
         $method->setAccessible(true);
 
@@ -110,9 +110,9 @@ describe('with valid config', function () {
             ->with('trx-mall-upload-sales-data-api-token', 'new_token', \Mockery::type('int'))
             ->once();
 
-        $client = new TangentApiClient($this->config);
+        $client = new TrxApiClient($this->config);
 
-        $method = new ReflectionMethod(TangentApiClient::class, 'getToken');
+        $method = new ReflectionMethod(TrxApiClient::class, 'getToken');
 
         $method->setAccessible(true);
 
@@ -132,10 +132,10 @@ describe('with valid config', function () {
             ], 500),
         ]);
 
-        $client = new TangentApiClient($this->config);
+        $client = new TrxApiClient($this->config);
 
         expect(function () use ($client) {
-            $method = new ReflectionMethod(TangentApiClient::class, 'getToken');
+            $method = new ReflectionMethod(TrxApiClient::class, 'getToken');
 
             $method->setAccessible(true);
 

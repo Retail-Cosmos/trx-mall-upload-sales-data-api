@@ -37,7 +37,7 @@ beforeEach(function () {
 describe('failure cases without notification', function () {
 
     it('fails when date is invalid', function () {
-        artisan('tangent:send-sales', [
+        artisan('trx:send-sales', [
             '--date' => 'invalid-date',
         ])->assertExitCode(1);
     });
@@ -47,14 +47,14 @@ describe('failure cases without notification', function () {
             'trx_mall_upload_sales_data_api.api' => null,
         ]);
 
-        artisan('tangent:send-sales')->assertExitCode(1);
+        artisan('trx:send-sales')->assertExitCode(1);
     });
 
     it('fails when no stores found', function () {
         $this->serviceMock->shouldReceive('getStores')->once()
             ->andReturn([]);
 
-        artisan('tangent:send-sales', [
+        artisan('trx:send-sales', [
             '--date' => '2024-02-01',
         ])->assertExitCode(1);
     });
@@ -70,7 +70,7 @@ describe('failure cases without notification', function () {
         $this->serviceMock->shouldReceive('getSales')->once()
             ->andReturn(collect([]));
 
-        artisan('tangent:send-sales', [
+        artisan('trx:send-sales', [
             '--date' => '2024-02-01',
         ])->assertExitCode(0);
     });
@@ -96,7 +96,7 @@ describe('failure cases with notification', function () {
         $this->serviceMock->shouldReceive('getStores')->once()
             ->andReturn([]);
 
-        artisan('tangent:send-sales', [
+        artisan('trx:send-sales', [
             '--date' => '2024-02-01',
         ])->assertExitCode(1);
     });
@@ -115,14 +115,14 @@ describe('failure cases with notification', function () {
 });
 
 describe('success cases without notification', function () {
-    it('sends sales data to tangent api', function (array $stores, array $sales) {
+    it('sends sales data to TRX api', function (array $stores, array $sales) {
         $this->serviceMock->shouldReceive('getStores')->once()
             ->andReturn($stores);
 
         $this->serviceMock->shouldReceive('getSales')->twice()
             ->andReturn(collect($sales));
 
-        artisan('tangent:send-sales', [
+        artisan('trx:send-sales', [
             '--date' => '2024-02-01',
         ])->assertExitCode(0);
 
@@ -150,7 +150,7 @@ describe('success cases with notification', function () {
         $this->serviceMock->shouldReceive('getSales')->twice()
             ->andReturn(collect($sales));
 
-        artisan('tangent:send-sales', [
+        artisan('trx:send-sales', [
             '--date' => '2024-02-01',
         ])->assertExitCode(0);
     })->with('valid_data');

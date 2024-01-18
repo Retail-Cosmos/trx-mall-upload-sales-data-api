@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Psr\Log\LoggerInterface;
-use RetailCosmos\TrxMallUploadSalesDataApi\Clients\TangentApiClient;
+use RetailCosmos\TrxMallUploadSalesDataApi\Clients\TrxApiClient;
 use RetailCosmos\TrxMallUploadSalesDataApi\Notifications\TrxApiStatusNotification;
 use RetailCosmos\TrxMallUploadSalesDataApi\Services\SalesDataProcessor;
 use RetailCosmos\TrxMallUploadSalesDataApi\Services\StoreDataProcessor;
@@ -20,7 +20,7 @@ class SendSalesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'tangent:send-sales
+    protected $signature = 'trx:send-sales
                 {--date= : Date in Y-m-d format. Defaults to previous day.}
                 {--store_identifier= : Store identifier. If not provided, all stores will be processed.}';
 
@@ -29,7 +29,7 @@ class SendSalesCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Send sales in hourly(00-23) format to Tangent API';
+    protected $description = 'Send sales in hourly(00-23) format to TRX API';
 
     private LoggerInterface $trxLogChannel;
 
@@ -48,7 +48,7 @@ class SendSalesCommand extends Command
      */
     public function handle(): int
     {
-        $message = 'start sending sales data to tangent api';
+        $message = 'start sending sales data to TRX api';
         $this->trxLogChannel->info($message);
         $this->info($message);
 
@@ -85,7 +85,7 @@ class SendSalesCommand extends Command
 
             $this->info('sales data sent successfully');
 
-            $message = 'end sending sales data to tangent api';
+            $message = 'end sending sales data to TRX api';
 
             $this->trxLogChannel->info($message);
 
@@ -101,7 +101,7 @@ class SendSalesCommand extends Command
 
             return 0;
         } catch (\Exception $e) {
-            $message = 'error sending sales data to tangent api';
+            $message = 'error sending sales data to TRX api';
 
             $this->trxLogChannel->error($message, [
                 'exception' => $e,
@@ -218,7 +218,7 @@ class SendSalesCommand extends Command
             return;
         }
 
-        $client = new TangentApiClient(config('trx_mall_upload_sales_data_api.api', []));
+        $client = new TrxApiClient(config('trx_mall_upload_sales_data_api.api', []));
 
         $messages = '';
 

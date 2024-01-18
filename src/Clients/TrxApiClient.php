@@ -6,7 +6,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class TangentApiClient
+class TrxApiClient
 {
     public function __construct(private array $config)
     {
