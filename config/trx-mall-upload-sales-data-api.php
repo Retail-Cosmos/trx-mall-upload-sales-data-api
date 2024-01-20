@@ -7,8 +7,8 @@ return [
      * Specifies the base URI, grant type, username, and password.
      */
     'api' => [
-        'base_uri' => env('TRX_MALL_API_BASE_URI'),
-        'grant_type' => env('TRX_MALL_API_GRANT_TYPE'),
+        'base_uri' => env('TRX_MALL_API_BASE_URI', 'https://staging.synthesis.bz/posmy/v1/api'),
+        'grant_type' => env('TRX_MALL_API_GRANT_TYPE', 'password'),
         'username' => env('TRX_MALL_API_USERNAME'),
         'password' => env('TRX_MALL_API_PASSWORD'),
     ],
@@ -17,7 +17,7 @@ return [
      * Date used to determine the batch_id for sales uploads.
      * The batch_id increments based on the date.
      * for first date it will be 1, for second date it will be 2 and so on.
-     * Format: Y-m-d (e.g. 2024-12-31)
+     * Format: Y-m-d (e.g. 2023-12-31)
      */
     'date_of_first_sales_upload' => env('TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD'),
 

@@ -32,7 +32,7 @@ php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-config"
 php artisan vendor:publish --tag="trx-mall-upload-sales-data-api-service"
 ```
 
-2. A new class is added at `app/Services/TrxMallUploadSalesDataService.php`. It contains a couple of methods to return the stores and sales data as per the requirements. You may make those methods dynamic by changing the code. You may check [this stub](stubs/TrxMallUploadSalesDataApiService.php) file anytime for future reference.
+2. A new class is added at `app/Services/TrxMallUploadSalesDataApiService.php`. It contains a couple of methods to return the stores and sales data as per the requirements. You may make those methods dynamic by changing the code. You may check [this stub](stubs/TrxMallUploadSalesDataApiService.php) file anytime for future reference.
 
 3. Add a [scheduler](https://laravel.com/docs/10.x/scheduling) in your [Laravel](https://laravel.com) project to call the command `trx:send-sales` daily at midnight. It sends the sales for the previous day for each store as returned from the application.
 
