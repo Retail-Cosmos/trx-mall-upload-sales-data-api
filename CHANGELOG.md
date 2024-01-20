@@ -2,6 +2,10 @@
 
 All notable changes to `trx-mall-upload-sales-data-api` will be documented in this file.
 
+## v1.0.3 - 2024-01-20
+
+Changes to allow TRX API call for get token
+
 ## v1.0.2 - 2024-01-20
 
 Text changes
