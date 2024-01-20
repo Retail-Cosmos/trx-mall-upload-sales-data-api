@@ -3,6 +3,7 @@
 namespace RetailCosmos\TrxMallUploadSalesDataApi\Clients;
 
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -74,13 +75,13 @@ class TrxApiClient
             return $token;
         }
 
-        $response = Http::asJson()
-            ->acceptJson()
-            ->get($this->config['base_uri'].'/token', [
+        $response = Http::acceptJson()
+            ->withBody(Arr::query([
                 'grant_type' => $this->config['grant_type'],
                 'username' => $this->config['username'],
                 'password' => $this->config['password'],
-            ]);
+            ]), 'text/plain')
+            ->get($this->config['base_uri'].'/token');
 
         if ($response->ok()) {
             $token = $response->json('access_token');
