@@ -14,7 +14,6 @@ class SalesDataProcessor
     private array $amountRules = [
         'required',
         'decimal:0,2',
-        'min:0',
     ];
 
     /**
