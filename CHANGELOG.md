@@ -2,6 +2,10 @@
 
 All notable changes to `trx-mall-upload-sales-data-api` will be documented in this file.
 
+## v1.0.4 - 2024-01-24
+
+Allow negative numbers for sale returns
+
 ## v1.0.3 - 2024-01-20
 
 Changes to allow TRX API call for get token
