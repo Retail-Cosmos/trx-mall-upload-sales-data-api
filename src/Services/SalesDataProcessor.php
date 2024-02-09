@@ -92,16 +92,18 @@ class SalesDataProcessor
         $date = Carbon::parse($this->date)->format('Ymd');
         foreach (range(0, 23) as $i) {
             $this->preparedSales[] = ['sale' => [
-                'machineid' => $storeData['machineid'],
-                'batchid' => $this->batchId,
-                'date' => $date,
-                'hour' => $i,
-                'receiptcount' => 0,
-                'gto' => 0,
-                'gst' => 0,
-                'discount' => 0,
-                ...array_fill_keys($this->paymentTypes, 0),
-                'gstregistered' => $storeData['gstregistered'],
+                'machineid' => (string) $storeData['machineid'],
+                'batchid' => (string) $this->batchId,
+                'date' => (string) $date,
+                'hour' => sprintf('%02d', $i),
+                'receiptcount' => (string) 0,
+                'gto' => (string) 0,
+                'gst' => (string) 0,
+                'discount' => (string) 0,
+                'servicecharge' => (string) 0,
+                'noofpax' => (string) 0,
+                ...array_fill_keys($this->paymentTypes, (string) 0),
+                'gstregistered' => (string) $storeData['gstregistered'],
             ]];
         }
     }
@@ -109,16 +111,16 @@ class SalesDataProcessor
     /**
      * @param  Collection<int,mixed>  $sales
      */
-    private function aggregateSalesForHour(Collection $sales, int $hour): void
+    private function aggregateSalesForHour(Collection $sales, string $hour): void
     {
         foreach ($this->preparedSales as &$sale) {
             if ($sale['sale']['hour'] === $hour) {
-                $sale['sale']['receiptcount'] = $sales->count();
-                $sale['sale']['gto'] = round($sales->sum('net_amount'), 2);
-                $sale['sale']['gst'] = round($sales->sum('gst'), 2);
-                $sale['sale']['discount'] = round($sales->sum('discount'), 2);
+                $sale['sale']['receiptcount'] = (string) $sales->count();
+                $sale['sale']['gto'] = (string) round($sales->sum('net_amount'), 2);
+                $sale['sale']['gst'] = (string) round($sales->sum('gst'), 2);
+                $sale['sale']['discount'] = (string) round($sales->sum('discount'), 2);
                 foreach ($this->paymentTypes as $paymentType) {
-                    $sale['sale'][$paymentType] = round($sales->sum('payments.'.$paymentType), 2);
+                    $sale['sale'][$paymentType] = (string) round($sales->sum('payments.'.$paymentType), 2);
                 }
             }
         }

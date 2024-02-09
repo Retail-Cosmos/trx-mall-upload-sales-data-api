@@ -230,10 +230,16 @@ class SendSalesCommand extends Command
             if (empty($sales)) {
                 continue;
             }
+
             $response = $client->sendSalesHourly($sales);
+
+            $this->trxLogChannel->error('Response from Tangent system', [
+                'response' => $responseBody = $response->body(),
+            ]);
+
             if (! $response->ok()) {
-                $messages .= 'got error while sending sales for store '.$storeIdentifier.PHP_EOL.
-                'error '.$response->json('errors.0.message').PHP_EOL;
+                $messages .= 'Error while sending sales for store: '.$storeIdentifier.PHP_EOL.
+                'Error: '.$responseBody.PHP_EOL;
             }
         }
 
