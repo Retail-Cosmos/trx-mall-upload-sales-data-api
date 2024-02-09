@@ -2,6 +2,10 @@
 
 All notable changes to `trx-mall-upload-sales-data-api` will be documented in this file.
 
+## Set data format as per API requirements and log the reponse - 2024-02-09
+
+Set data format as per API requirements and log the reponse
+
 ## v1.0.4 - 2024-01-24
 
 Allow negative numbers for sale returns
