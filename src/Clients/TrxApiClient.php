@@ -89,21 +89,12 @@ class TrxApiClient
             Cache::put(
                 'trx-mall-upload-sales-data-api-token',
                 $token,
-                $this->getExpiryPriorToToken($response->json('expires_in'), minutes: 5)
+                $response->json('expires_in')
             );
 
             return (string) $token;
         } else {
             throw new \Exception($response->json('error_description'));
         }
-    }
-
-    /**
-     * if token expires in $expiry seconds,
-     * we will get a new token $minutes before it expires
-     */
-    private function getExpiryPriorToToken(int $expiry, int $minutes): int
-    {
-        return time() + $expiry - 60 * $minutes;
     }
 }
