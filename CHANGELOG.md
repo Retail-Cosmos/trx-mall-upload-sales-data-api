@@ -2,6 +2,10 @@
 
 All notable changes to `trx-mall-upload-sales-data-api` will be documented in this file.
 
+## v1.0.6 - 2024-02-12
+
+Fix: cache put() expects seconds not utc timestamp
+
 ## Set data format as per API requirements and log the reponse - 2024-02-09
 
 Set data format as per API requirements and log the reponse
