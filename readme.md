@@ -79,7 +79,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [Punyapal Shah](https://github.com/MrPunyapal])
+- [Punyapal Shah](https://github.com/MrPunyapal)
 - [Gaurav Makhecha](https://github.com/gauravmak)
 - [All Contributors](../../contributors)
 
