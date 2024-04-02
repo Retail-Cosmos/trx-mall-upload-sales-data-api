@@ -107,10 +107,13 @@ describe('failure cases with notification', function () {
         config([
             'trx_mall_upload_sales_data_api.notifications.mail.name' => $this->mailConfig['name'],
             'trx_mall_upload_sales_data_api.notifications.mail.email' => $this->mailConfig['email'],
+            'trx_mall_upload_sales_data_api.notifications.mail.enable_failure_notifications_only' => true,
         ]);
     });
 
-    it('sends failure notification when no stores found', function () {
+    it('sends failure notification when no stores found', function ($isEnableFailureNotificationsOnly) {
+
+        config()->set('trx_mall_upload_sales_data_api.notifications.mail.enable_failure_notifications_only', $isEnableFailureNotificationsOnly);
 
         $this->serviceMock->shouldReceive('getStores')->once()
             ->andReturn([]);
@@ -118,7 +121,11 @@ describe('failure cases with notification', function () {
         artisan('trx:send-sales', [
             '--date' => '2024-01-11',
         ])->assertExitCode(1);
-    });
+
+    })->with([
+        ['enable_failure_notifications_only' => true],
+        ['enable_failure_notifications_only' => false],
+    ]);
 
     afterEach(function () {
         Notification::assertSentOnDemand(
@@ -159,6 +166,7 @@ describe('success cases with notification', function () {
         config([
             'trx_mall_upload_sales_data_api.notifications.mail.name' => $this->mailConfig['name'],
             'trx_mall_upload_sales_data_api.notifications.mail.email' => $this->mailConfig['email'],
+            'trx_mall_upload_sales_data_api.notifications.mail.enable_failure_notifications_only' => false,
         ]);
     });
 

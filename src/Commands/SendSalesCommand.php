@@ -149,6 +149,7 @@ class SendSalesCommand extends Command
             'api.password' => 'required|string',
             'notifications.mail.name' => 'nullable|string',
             'notifications.mail.email' => 'nullable|email',
+            'notifications.mail.enable_failure_notifications_only' => 'required|boolean',
             'date_of_first_sales_upload' => 'required|date_format:Y-m-d|before_or_equal:today',
         ], [
             '*.required' => $requiredConfigMessage,
@@ -161,6 +162,7 @@ class SendSalesCommand extends Command
             'api.password' => 'TRX_MALL_API_PASSWORD',
             'notifications.mail.name' => 'TRX_MALL_NOTIFICATION_MAIL_NAME',
             'notifications.mail.email' => 'TRX_MALL_NOTIFICATION_MAIL_EMAIL',
+            'notifications.mail.enable_failure_notifications_only' => 'TRX_MALL_NOTIFICATION_MAIL_ENABLE_FAILURE_NOTIFICATIONS_ONLY',
             'date_of_first_sales_upload' => 'TRX_MALL_DATE_OF_FIRST_SALES_UPLOAD',
         ]);
 
@@ -252,8 +254,12 @@ class SendSalesCommand extends Command
     {
         if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
             $name = config('trx_mall_upload_sales_data_api.notifications.mail.name');
-            Notification::route('mail', $email)
-                ->notify(new TrxApiStatusNotification($name, $status, $message));
+
+            $isEnabledFailureNotificationsOnly = config('trx_mall_upload_sales_data_api.notifications.mail.enable_failure_notifications_only');
+
+            if (($isEnabledFailureNotificationsOnly && $status == 'error') || ! $isEnabledFailureNotificationsOnly) {
+                Notification::route('mail', $email)->notify(new TrxApiStatusNotification($name, $status, $message));
+            }
         }
     }
 
