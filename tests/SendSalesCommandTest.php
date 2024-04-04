@@ -188,14 +188,14 @@ describe('success cases with notification', function () {
     });
 });
 
-describe('when enable_failure_notifications_only is true', function () {
+describe('when trigger_failure_notifications_only is true', function () {
 
     beforeEach(function () {
         $this->mailConfig = ['name' => 'test', 'email' => 'user@example.com'];
         config([
             'trx_mall_upload_sales_data_api.notifications.mail.name' => $this->mailConfig['name'],
             'trx_mall_upload_sales_data_api.notifications.mail.email' => $this->mailConfig['email'],
-            'trx_mall_upload_sales_data_api.notifications.mail.enable_failure_notifications_only' => true,
+            'trx_mall_upload_sales_data_api.notifications.mail.trigger_failure_notifications_only' => true,
         ]);
     });
 
@@ -239,14 +239,14 @@ describe('when enable_failure_notifications_only is true', function () {
 
 });
 
-describe('when enable_failure_notifications_only is false', function () {
+describe('when trigger_failure_notifications_only is false', function () {
 
     beforeEach(function () {
         $this->mailConfig = ['name' => 'test', 'email' => 'user@example.com'];
         config([
             'trx_mall_upload_sales_data_api.notifications.mail.name' => $this->mailConfig['name'],
             'trx_mall_upload_sales_data_api.notifications.mail.email' => $this->mailConfig['email'],
-            'trx_mall_upload_sales_data_api.notifications.mail.enable_failure_notifications_only' => false,
+            'trx_mall_upload_sales_data_api.notifications.mail.trigger_failure_notifications_only' => false,
         ]);
     });
 

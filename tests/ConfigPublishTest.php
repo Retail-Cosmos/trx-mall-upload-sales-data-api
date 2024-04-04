@@ -44,6 +44,6 @@ it('has all required configuration available', function () {
     expect(array_keys($config['notifications']['mail']))->toEqual([
         'name',
         'email',
-        'enable_failure_notifications_only',
+        'trigger_failure_notifications_only',
     ]);
 });
