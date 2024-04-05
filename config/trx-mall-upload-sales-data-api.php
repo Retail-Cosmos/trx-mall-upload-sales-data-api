@@ -39,6 +39,7 @@ return [
         'mail' => [
             'name' => env('TRX_MALL_NOTIFICATION_MAIL_NAME', 'sir/madam'),
             'email' => env('TRX_MALL_NOTIFICATION_MAIL_EMAIL'),
+            'trigger_failure_notifications_only' => env('TRX_MALL_NOTIFICATION_MAIL_TRIGGER_FAILURE_NOTIFICATIONS_ONLY', false), // This flag determines whether only failure notifications should be received. Set to 'true' to receive only failure notifications, 'false' for all notifications.
         ],
     ],
 ];

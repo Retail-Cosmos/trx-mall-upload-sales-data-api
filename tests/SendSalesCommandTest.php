@@ -118,6 +118,7 @@ describe('failure cases with notification', function () {
         artisan('trx:send-sales', [
             '--date' => '2024-01-11',
         ])->assertExitCode(1);
+
     });
 
     afterEach(function () {
@@ -185,6 +186,114 @@ describe('success cases with notification', function () {
         );
         Http::assertSentCount(3); // 1 for fetching token, 2 for sending sales for 2 stores
     });
+});
+
+describe('when trigger_failure_notifications_only is true', function () {
+
+    beforeEach(function () {
+        $this->mailConfig = ['name' => 'test', 'email' => 'user@example.com'];
+        config([
+            'trx_mall_upload_sales_data_api.notifications.mail.name' => $this->mailConfig['name'],
+            'trx_mall_upload_sales_data_api.notifications.mail.email' => $this->mailConfig['email'],
+            'trx_mall_upload_sales_data_api.notifications.mail.trigger_failure_notifications_only' => true,
+        ]);
+    });
+
+    it('does not send success notification', function (array $stores, array $sales) {
+
+        $this->serviceMock->shouldReceive('getStores')->once()
+            ->andReturn($stores);
+
+        $this->serviceMock->shouldReceive('getSales')->twice()
+            ->andReturn(collect($sales));
+
+        artisan('trx:send-sales', [
+            '--date' => '2024-01-11',
+        ])->assertExitCode(0);
+
+        Notification::assertNothingSent();
+        Http::assertSentCount(3);
+
+    })->with('valid_data');
+
+    it('does send failure notification', function () {
+
+        $this->serviceMock->shouldReceive('getStores')->once()
+            ->andReturn([]);
+
+        artisan('trx:send-sales', [
+            '--date' => '2024-01-11',
+        ])->assertExitCode(1);
+
+        Notification::assertSentOnDemand(
+            TrxApiStatusNotification::class,
+            function ($notification, $channels, $notifiable) {
+                return $notifiable->routes['mail'] == $this->mailConfig['email']
+                && $notification->status === 'error'
+                && $notification->name === $this->mailConfig['name'];
+            }
+        );
+        Http::assertNothingSent();
+
+    });
+
+});
+
+describe('when trigger_failure_notifications_only is false', function () {
+
+    beforeEach(function () {
+        $this->mailConfig = ['name' => 'test', 'email' => 'user@example.com'];
+        config([
+            'trx_mall_upload_sales_data_api.notifications.mail.name' => $this->mailConfig['name'],
+            'trx_mall_upload_sales_data_api.notifications.mail.email' => $this->mailConfig['email'],
+            'trx_mall_upload_sales_data_api.notifications.mail.trigger_failure_notifications_only' => false,
+        ]);
+    });
+
+    it('does send success notification', function (array $stores, array $sales) {
+
+        $this->serviceMock->shouldReceive('getStores')->once()
+            ->andReturn($stores);
+
+        $this->serviceMock->shouldReceive('getSales')->twice()
+            ->andReturn(collect($sales));
+
+        artisan('trx:send-sales', [
+            '--date' => '2024-01-11',
+        ])->assertExitCode(0);
+
+        Notification::assertSentOnDemand(
+            TrxApiStatusNotification::class,
+            function ($notification, $channels, $notifiable) {
+                return $notifiable->routes['mail'] == $this->mailConfig['email']
+                && $notification->status === 'success'
+                && $notification->name === $this->mailConfig['name'];
+            }
+        );
+        Http::assertSentCount(3);
+    })->with('valid_data');
+
+    it('does send failure notification', function () {
+
+        $this->serviceMock->shouldReceive('getStores')->once()
+            ->andReturn([]);
+
+        artisan('trx:send-sales', [
+            '--date' => '2024-01-11',
+        ])->assertExitCode(1);
+
+        Notification::assertSentOnDemand(
+            TrxApiStatusNotification::class,
+            function ($notification, $channels, $notifiable) {
+                return $notifiable->routes['mail'] == $this->mailConfig['email']
+                && $notification->status === 'error'
+                && $notification->name === $this->mailConfig['name'];
+            }
+        );
+        Http::assertNothingSent();
+
+    });
+
 });
 
 dataset('valid_data', [[
