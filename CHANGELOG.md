@@ -2,6 +2,10 @@
 
 All notable changes to `trx-mall-upload-sales-data-api` will be documented in this file.
 
+## v1.0.7 - 2024-05-07
+
+Option to trigger failure notifications only
+
 ## v1.0.6 - 2024-02-12
 
 Fix: cache put() expects seconds not utc timestamp
