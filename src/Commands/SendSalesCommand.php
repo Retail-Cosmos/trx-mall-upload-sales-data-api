@@ -259,7 +259,7 @@ class SendSalesCommand extends Command
         if ($email = config('trx_mall_upload_sales_data_api.notifications.mail.email')) {
             $name = config('trx_mall_upload_sales_data_api.notifications.mail.name');
 
-            Notification::route('mail', $email)->notify(new TrxApiStatusNotification($name, $status, $message));
+            Notification::route('mail', [$email => $name])->notify(new TrxApiStatusNotification($name, $status, $message));
         }
     }
 

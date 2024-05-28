@@ -33,4 +33,23 @@ class TestCase extends Orchestra
         $migration->up();
         */
     }
+
+    public function assertNotificationDetails(
+        $notification,
+        $notifiable,
+        string $expectedEmail,
+        string $expectedStatus,
+        string $expectedReceiverName
+    ): bool {
+        $routeKeys = array_keys($notifiable->routes['mail']);
+        if (count($routeKeys) > 0) {
+            $email = $routeKeys[0];
+
+            return $email === $expectedEmail
+                && $notification->status === $expectedStatus
+                && $notification->name === $expectedReceiverName;
+        }
+
+        return false;
+    }
 }

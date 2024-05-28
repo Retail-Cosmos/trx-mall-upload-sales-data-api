@@ -125,9 +125,13 @@ describe('failure cases with notification', function () {
         Notification::assertSentOnDemand(
             TrxApiStatusNotification::class,
             function ($notification, $channels, $notifiable) {
-                return $notifiable->routes['mail'] == $this->mailConfig['email']
-                && $notification->status === 'error'
-                && $notification->name === $this->mailConfig['name'];
+                return $this->assertNotificationDetails(
+                    notification: $notification,
+                    notifiable: $notifiable,
+                    expectedEmail: $this->mailConfig['email'],
+                    expectedStatus: 'error',
+                    expectedReceiverName: $this->mailConfig['name']
+                );
             }
         );
         Http::assertNothingSent();
@@ -179,9 +183,13 @@ describe('success cases with notification', function () {
         Notification::assertSentOnDemand(
             TrxApiStatusNotification::class,
             function ($notification, $channels, $notifiable) {
-                return $notifiable->routes['mail'] == $this->mailConfig['email']
-                && $notification->status === 'success'
-                && $notification->name === $this->mailConfig['name'];
+                return $this->assertNotificationDetails(
+                    notification: $notification,
+                    notifiable: $notifiable,
+                    expectedEmail: $this->mailConfig['email'],
+                    expectedStatus: 'success',
+                    expectedReceiverName: $this->mailConfig['name']
+                );
             }
         );
         Http::assertSentCount(3); // 1 for fetching token, 2 for sending sales for 2 stores
@@ -228,9 +236,13 @@ describe('when trigger_failure_notifications_only is true', function () {
         Notification::assertSentOnDemand(
             TrxApiStatusNotification::class,
             function ($notification, $channels, $notifiable) {
-                return $notifiable->routes['mail'] == $this->mailConfig['email']
-                && $notification->status === 'error'
-                && $notification->name === $this->mailConfig['name'];
+                return $this->assertNotificationDetails(
+                    notification: $notification,
+                    notifiable: $notifiable,
+                    expectedEmail: $this->mailConfig['email'],
+                    expectedStatus: 'error',
+                    expectedReceiverName: $this->mailConfig['name']
+                );
             }
         );
         Http::assertNothingSent();
@@ -265,9 +277,13 @@ describe('when trigger_failure_notifications_only is false', function () {
         Notification::assertSentOnDemand(
             TrxApiStatusNotification::class,
             function ($notification, $channels, $notifiable) {
-                return $notifiable->routes['mail'] == $this->mailConfig['email']
-                && $notification->status === 'success'
-                && $notification->name === $this->mailConfig['name'];
+                return $this->assertNotificationDetails(
+                    notification: $notification,
+                    notifiable: $notifiable,
+                    expectedEmail: $this->mailConfig['email'],
+                    expectedStatus: 'success',
+                    expectedReceiverName: $this->mailConfig['name']
+                );
             }
         );
         Http::assertSentCount(3);
@@ -285,9 +301,13 @@ describe('when trigger_failure_notifications_only is false', function () {
         Notification::assertSentOnDemand(
             TrxApiStatusNotification::class,
             function ($notification, $channels, $notifiable) {
-                return $notifiable->routes['mail'] == $this->mailConfig['email']
-                && $notification->status === 'error'
-                && $notification->name === $this->mailConfig['name'];
+                return $this->assertNotificationDetails(
+                    notification: $notification,
+                    notifiable: $notifiable,
+                    expectedEmail: $this->mailConfig['email'],
+                    expectedStatus: 'error',
+                    expectedReceiverName: $this->mailConfig['name']
+                );
             }
         );
         Http::assertNothingSent();
