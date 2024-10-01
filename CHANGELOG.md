@@ -2,6 +2,10 @@
 
 All notable changes to `trx-mall-upload-sales-data-api` will be documented in this file.
 
+## v2 0.0 - 2024-10-01
+
+Support for PHP 8.3 and Laravel 11
+
 ## v1.0.7 - 2024-05-07
 
 Option to trigger failure notifications only
