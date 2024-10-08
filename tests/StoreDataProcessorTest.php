@@ -16,7 +16,7 @@ it('validates and prepare the store data', function () {
         ],
     ];
 
-    $processor = new StoreDataProcessor();
+    $processor = new StoreDataProcessor;
 
     $processedData = $processor->process($storeData);
 
@@ -32,7 +32,7 @@ it('validates and prepare the store data', function () {
 });
 
 it('throws exception for invalid store data', function ($storeData) {
-    $processor = new StoreDataProcessor();
+    $processor = new StoreDataProcessor;
 
     expect(function () use ($processor, $storeData) {
         $processor->process($storeData);
