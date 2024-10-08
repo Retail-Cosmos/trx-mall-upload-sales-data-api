@@ -235,7 +235,7 @@ class SendSalesCommand extends Command
 
             $response = $client->sendSalesHourly($sales);
 
-            $this->trxLogChannel->error('Response from Tangent system', [
+            $this->trxLogChannel->info('Response from Tangent system', [
                 'response' => $responseBody = $response->body(),
             ]);
 
