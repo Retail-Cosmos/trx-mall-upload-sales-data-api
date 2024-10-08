@@ -10,7 +10,9 @@ class TrxApiStatusNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public string $name, public string $status, public string $messages) {}
+    public function __construct(public string $name, public string $status, public string $messages)
+    {
+    }
 
     /**
      * Get the notification's delivery channels.
