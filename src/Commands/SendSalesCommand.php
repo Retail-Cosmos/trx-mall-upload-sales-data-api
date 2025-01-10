@@ -81,7 +81,7 @@ class SendSalesCommand extends Command
 
             $this->info('sending sales data');
 
-            $this->sendSales($sales);
+            $this->sendSales($sales, $date);
 
             $this->info('sales data sent successfully');
 
@@ -218,7 +218,7 @@ class SendSalesCommand extends Command
      *
      * @throws \Exception
      */
-    private function sendSales(array $groupedSales): void
+    private function sendSales(array $groupedSales, string $date): void
     {
         if (empty($groupedSales)) {
             return;
@@ -237,6 +237,7 @@ class SendSalesCommand extends Command
 
             $this->trxLogChannel->info('Response from Tangent system', [
                 'response' => $responseBody = $response->body(),
+                'log_date' => $date,
             ]);
 
             if (! $response->ok()) {
