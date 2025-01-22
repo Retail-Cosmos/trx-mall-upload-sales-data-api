@@ -2,7 +2,11 @@
 
 All notable changes to `trx-mall-upload-sales-data-api` will be documented in this file.
 
-## v2 0.0 - 2024-10-01
+## v2.0.1 - 2025-01-22
+
+Log the sales date for easy debugging
+
+## v2.0.0 - 2024-10-01
 
 Support for PHP 8.3 and Laravel 11
 
@@ -14,7 +18,7 @@ Option to trigger failure notifications only
 
 Fix: cache put() expects seconds not utc timestamp
 
-## Set data format as per API requirements and log the reponse - 2024-02-09
+## v1.0.5 - 2024-02-09
 
 Set data format as per API requirements and log the reponse
 
