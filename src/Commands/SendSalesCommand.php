@@ -237,7 +237,7 @@ class SendSalesCommand extends Command
 
             $this->trxLogChannel->info('Response from Tangent system', [
                 'response' => $responseBody = $response->body(),
-                'log_date' => $date,
+                'date' => $date,
             ]);
 
             if (! $response->ok()) {
